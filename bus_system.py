@@ -25,11 +25,11 @@ class IEEE30BusTopology(Topo):
         for i in range(1, self.num_pmus + 1):
             h = self.addHost('pmu%d' % i)
             self.pmus.append(h)
-        self.addHost('cc')
+
         # pdc switches
         for i in range(1, self.num_pdcs + 1):
-            sw = self.addSwitch('pdc%d' % i)
-            self.pdcs.append(sw)
+            h = self.addHost('pdc%d' % i)
+            self.pdcs.append(h)
         for i in range(1, self.num_switches + 1):
             sw = self.addSwitch('s%d' % i)
             if i < 17:
@@ -45,16 +45,6 @@ class IEEE30BusTopology(Topo):
         self.addLink('s18', 's19')
         self.addLink('s18', 's20')
         self.addLink('s19', 's20')
-
-        # link core to edge switches
-        for i in range(1, 5):
-            self.addLink('s%d' % i, 's17')
-        for i in range(5, 9):
-            self.addLink('s%d' % i, 's18')
-        for i in range(9, 13):
-            self.addLink('s%d' % i, 's19')
-        for i in range(13, 17):
-            self.addLink('s%d' % i, 's20')
 
         # link pmu to edge switches
         self.addLink('s1', 'pmu1')
@@ -87,12 +77,20 @@ class IEEE30BusTopology(Topo):
         self.addLink('s14', 'pmu30')
         self.addLink('s15', 'pmu28')
         self.addLink('s16', 'pmu29')
-        self.addLink('s18', 'cc') 
-        print self.hosts()
+
+        # link core to edge switches
+        for i in range(1, 5):
+            self.addLink('s%d' % i, 's17')
+        for i in range(5, 9):
+            self.addLink('s%d' % i, 's18')
+        for i in range(9, 13):
+            self.addLink('s%d' % i, 's19')
+        for i in range(13, 17):
+            self.addLink('s%d' % i, 's20') 
 
 def IEEE30BusNetwork():
     topo = IEEE30BusTopology()
-    net = Mininet(topo=topo, host=Host, switch=OVSKernelSwitch, controller=RemoteController, waitConnected=True)
+    net = Mininet(topo=topo, host=Host, switch=OVSKernelSwitch, controller=RemoteController, autoStaticArp=True, waitConnected=True)
 
     net.start()
 
