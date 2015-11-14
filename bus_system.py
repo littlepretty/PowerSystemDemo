@@ -95,7 +95,7 @@ def IEEE30BusNetwork():
 
     net.start()
 
-    net.pingAll()
+    # net.pingAll()
 
     CLI(net)
     net.stop()

@@ -22,6 +22,7 @@ from ryu.controller import ofp_event
 from ryu.controller.handler import MAIN_DISPATCHER
 from ryu.controller.handler import set_ev_cls
 from ryu.ofproto import ofproto_v1_0
+import ryu.lib.addrconv
 from ryu.lib.mac import haddr_to_bin
 from ryu.lib.packet import packet
 from ryu.lib.packet import ethernet
@@ -36,48 +37,50 @@ class SelfHealController(app_manager.RyuApp):
     def __init__(self, *args, **kwargs):
         super(SelfHealController, self).__init__(*args, **kwargs)
         self.topology_api_app = self
+        #store sw's dpid(int)
         self.switches = []
+        # store the port number from sw to sw
         self.links = {}
+        # store the port number from sw to host
         self.sw_to_host = {}
-        for i in range(1, 17):
-            self.sw_to_host['%d' % i] = {'10.0.0.%d' % i : 1}
-        self.sw_to_host['1']['10.0.0.17'] = 2
-        self.sw_to_host['1']['10.0.0.18'] = 3
-        self.sw_to_host['1']['10.0.0.20'] = 4
-        self.sw_to_host['2']['10.0.0.19'] = 2
-        self.sw_to_host['3']['10.0.0.21'] = 2
-        self.sw_to_host['3']['10.0.0.23'] = 3
-        self.sw_to_host['4']['10.0.0.22'] = 2
-        self.sw_to_host['4']['10.0.0.24'] = 3
-        self.sw_to_host['5']['10.0.0.25'] = 2
-        self.sw_to_host['5']['10.0.0.27'] = 3
-        self.sw_to_host['6']['10.0.0.26'] = 2
-        self.sw_to_host['6']['10.0.0.33'] = 3
-        self.sw_to_host['6']['10.0.0.36'] = 4
-        self.sw_to_host['6']['10.0.0.37'] = 5
-        self.sw_to_host['7']['10.0.0.28'] = 2
-        self.sw_to_host['7']['10.0.0.29'] = 3
-        self.sw_to_host['7']['10.0.0.30'] = 4
-        self.sw_to_host['8']['10.0.0.31'] = 2
-        self.sw_to_host['8']['10.0.0.34'] = 3
-        self.sw_to_host['8']['10.0.0.39'] = 4
-        self.sw_to_host['9']['10.0.0.32'] = 2
-        self.sw_to_host['10']['10.0.0.35'] = 2
-        self.sw_to_host['11']['10.0.0.38'] = 2
-        self.sw_to_host['12']['10.0.0.40'] = 2
-        self.sw_to_host['13']['10.0.0.41'] = 2
-        self.sw_to_host['13']['10.0.0.42'] = 3
-        self.sw_to_host['14']['10.0.0.43'] = 2
-        self.sw_to_host['14']['10.0.0.46'] = 3
-        self.sw_to_host['15']['10.0.0.44'] = 2
-        self.sw_to_host['16']['10.0.0.45'] = 2
-
+        for i in range(1, 21):
+            self.sw_to_host[i] = {'10.0.0.%d' % i : 1}
+        self.sw_to_host[1]['10.0.0.17'] = 2
+        self.sw_to_host[1]['10.0.0.18'] = 3
+        self.sw_to_host[1]['10.0.0.20'] = 4
+        self.sw_to_host[2]['10.0.0.19'] = 2
+        self.sw_to_host[3]['10.0.0.21'] = 2
+        self.sw_to_host[3]['10.0.0.23'] = 3
+        self.sw_to_host[4]['10.0.0.22'] = 2
+        self.sw_to_host[4]['10.0.0.24'] = 3
+        self.sw_to_host[5]['10.0.0.25'] = 2
+        self.sw_to_host[5]['10.0.0.27'] = 3
+        self.sw_to_host[6]['10.0.0.26'] = 2
+        self.sw_to_host[6]['10.0.0.33'] = 3
+        self.sw_to_host[6]['10.0.0.36'] = 4
+        self.sw_to_host[6]['10.0.0.37'] = 5
+        self.sw_to_host[7]['10.0.0.28'] = 2
+        self.sw_to_host[7]['10.0.0.29'] = 3
+        self.sw_to_host[7]['10.0.0.30'] = 4
+        self.sw_to_host[8]['10.0.0.31'] = 2
+        self.sw_to_host[8]['10.0.0.34'] = 3
+        self.sw_to_host[8]['10.0.0.39'] = 4
+        self.sw_to_host[9]['10.0.0.32'] = 2
+        self.sw_to_host[10]['10.0.0.35'] = 2
+        self.sw_to_host[11]['10.0.0.38'] = 2
+        self.sw_to_host[12]['10.0.0.40'] = 2
+        self.sw_to_host[13]['10.0.0.41'] = 2
+        self.sw_to_host[13]['10.0.0.42'] = 3
+        self.sw_to_host[14]['10.0.0.43'] = 2
+        self.sw_to_host[14]['10.0.0.46'] = 3
+        self.sw_to_host[15]['10.0.0.44'] = 2
+        self.sw_to_host[16]['10.0.0.45'] = 2
 
     def add_flow(self, datapath, in_port, dst, actions):
         ofproto = datapath.ofproto
 
         match = datapath.ofproto_parser.OFPMatch(
-            in_port=in_port, dl_dst=haddr_to_bin(dst))
+                in_port=in_port, dl_dst=haddr_to_bin(dst))
 
         mod = datapath.ofproto_parser.OFPFlowMod(
             datapath=datapath, match=match, cookie=0,
@@ -99,16 +102,32 @@ class SelfHealController(app_manager.RyuApp):
                 self.links[link.src.dpid] = {}
             self.links[link.src.dpid][link.dst.dpid] = link.src.port_no
 
-    @set_ev_cls(event.EventLinkDelete)
-    def _link_delete_handler(self, ev):
-        print ev.link
+    @set_ev_cls(event.EventPortModify)
+    def _link_delete_handler(self, ev): 
+        print "Self heal link down event"
+        port = ev.port
+        dpid = port.dpid
+        port_no = port.port_no
+        event_name = port.name
+        if dpid == 8:
+            self.sw_to_host[5]['10.0.0.31'] = self.links[5][18]
+            self.sw_to_host[18]['10.0.0.31'] = self.links[18][8]
+            self.sw_to_host[8]['10.0.0.5'] = self.links[8][18]
+            self.sw_to_host[18]['10.0.0.5'] = self.links[18][5]
+        if dpid == 13:
+            self.sw_to_host[5]['10.0.0.41'] = self.links[5][18]
+            self.sw_to_host[18]['10.0.0.41'] = self.links[18][20]
+            self.sw_to_host[20]['10.0.0.41'] = self.links[20][13]
+            self.sw_to_host[13]['10.0.0.5'] = self.links[13][20]
+            self.sw_to_host[20]['10.0.0.5'] = self.links[20][18]
+            self.sw_to_host[18]['10.0.0.5'] = self.links[18][5]
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
         msg = ev.msg
         datapath = msg.datapath
         ofproto = datapath.ofproto
-        dpid = str(datapath.id)
+        dpid = datapath.id
 
         pkt = packet.Packet(msg.data)
         pkt_eth = pkt.get_protocol(ethernet.ethernet)
@@ -132,7 +151,7 @@ class SelfHealController(app_manager.RyuApp):
 
                 # install a flow to avoid packet_in next time
                 actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
-                self.add_flow(datapath, msg.in_port, eth_dst, actions)
+                # self.add_flow(datapath, msg.in_port, eth_dst, actions)
                 data = None
                 if msg.buffer_id == ofproto.OFP_NO_BUFFER:
                     data = msg.data
