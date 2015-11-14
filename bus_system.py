@@ -86,15 +86,15 @@ class IEEE30BusTopology(Topo):
         for i in range(9, 13):
             self.addLink('s%d' % i, 's19')
         for i in range(13, 17):
-            self.addLink('s%d' % i, 's20') 
-    
+            self.addLink('s%d' % i, 's20')
+
 def IEEE30BusNetwork():
     """Kickoff the network"""
     topo = IEEE30BusTopology()
     net = Mininet(topo=topo, host=Host, switch=OVSKernelSwitch, controller=RemoteController, autoStaticArp=True, waitConnected=True)
 
     net.start()
-    
+
     net.pingAll()
 
     CLI(net)

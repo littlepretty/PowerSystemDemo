@@ -26,8 +26,8 @@ from ryu.lib.mac import haddr_to_bin
 from ryu.lib.packet import packet
 from ryu.lib.packet import ethernet
 from ryu.lib.packet import ether_types
-from ryu.lib.packet import ipv4, icmp, arp
-from ryu.topology import event, switches
+from ryu.lib.packet import ipv4, icmp
+from ryu.topology import event
 from ryu.topology.api import get_switch, get_link
 
 class SelfHealController(app_manager.RyuApp):
@@ -36,7 +36,7 @@ class SelfHealController(app_manager.RyuApp):
     def __init__(self, *args, **kwargs):
         super(SelfHealController, self).__init__(*args, **kwargs)
         self.topology_api_app = self
-        self.switches = [] 
+        self.switches = []
         self.links = {}
         self.sw_to_host = {}
         for i in range(1, 17):
@@ -46,9 +46,9 @@ class SelfHealController(app_manager.RyuApp):
         self.sw_to_host['1']['10.0.0.20'] = 4
         self.sw_to_host['2']['10.0.0.19'] = 2
         self.sw_to_host['3']['10.0.0.21'] = 2
-        self.sw_to_host['3']['10.0.0.23'] = 2
+        self.sw_to_host['3']['10.0.0.23'] = 3
         self.sw_to_host['4']['10.0.0.22'] = 2
-        self.sw_to_host['4']['10.0.0.24'] = 2
+        self.sw_to_host['4']['10.0.0.24'] = 3
         self.sw_to_host['5']['10.0.0.25'] = 2
         self.sw_to_host['5']['10.0.0.27'] = 3
         self.sw_to_host['6']['10.0.0.26'] = 2
@@ -96,16 +96,20 @@ class SelfHealController(app_manager.RyuApp):
         link_list = get_link(self.topology_api_app, None)
         for link in link_list:
             if link.src.dpid not in self.links.keys():
-                self.links[link.src.dpid] = {}    
-            self.links[link.src.dpid][link.dst.dpid] = link.src.port_no 
+                self.links[link.src.dpid] = {}
+            self.links[link.src.dpid][link.dst.dpid] = link.src.port_no
+
+    @set_ev_cls(event.EventLinkDelete)
+    def _link_delete_handler(self, ev):
+        print ev.link
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
         msg = ev.msg
         datapath = msg.datapath
-        ofproto = datapath.ofproto        
+        ofproto = datapath.ofproto
         dpid = str(datapath.id)
-        
+
         pkt = packet.Packet(msg.data)
         pkt_eth = pkt.get_protocol(ethernet.ethernet)
         pkt_icmp = pkt.get_protocol(icmp.icmp)
@@ -115,18 +119,18 @@ class SelfHealController(app_manager.RyuApp):
             return
         eth_dst = pkt_eth.dst
         eth_src = pkt_eth.src
-        self.logger.info("packet in %s(port_%s) from %s to %s", dpid, msg.in_port, eth_src, eth_dst) 
-        
+        self.logger.info("packet in %s(port_%s) from %s to %s", dpid, msg.in_port, eth_src, eth_dst)
+
         if pkt_icmp:
             pkt_ip = pkt.get_protocol(ipv4.ipv4)
-            ip_src = str(pkt_ip.src)
+            # ip_src = str(pkt_ip.src)
             ip_dst = str(pkt_ip.dst)
 
             if ip_dst in self.sw_to_host[dpid].keys():
                 out_port = self.sw_to_host[dpid][ip_dst]
                 self.logger.info("forward to port %s", out_port)
 
-                # install a flow to avoid packet_in next time 
+                # install a flow to avoid packet_in next time
                 actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
                 self.add_flow(datapath, msg.in_port, eth_dst, actions)
                 data = None
