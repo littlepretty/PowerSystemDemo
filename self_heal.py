@@ -104,7 +104,7 @@ class SelfHealController(app_manager.RyuApp):
         msg = ev.msg
         datapath = msg.datapath
         ofproto = datapath.ofproto        
-        dpid = datapath.id
+        dpid = str(datapath.id)
         
         pkt = packet.Packet(msg.data)
         pkt_eth = pkt.get_protocol(ethernet.ethernet)
@@ -115,32 +115,27 @@ class SelfHealController(app_manager.RyuApp):
             return
         eth_dst = pkt_eth.dst
         eth_src = pkt_eth.src
+        self.logger.info("packet in %s(port_%s) from %s to %s", dpid, msg.in_port, eth_src, eth_dst) 
         
         if pkt_icmp:
             pkt_ip = pkt.get_protocol(ipv4.ipv4)
-            ip_src = pkt_ip.src
-            ip_dst = pkt_ip.dst
-            print ip_src, ip_dst
-            print self.links
-        
-        
-        out_port = self.sw_to_host[dpid][ip_dst]
-        self.logger.info("packet in %s(port_%s) from %s to %s", dpid, msg.in_port, eth_src, eth_dst)
-        
-        actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
+            ip_src = str(pkt_ip.src)
+            ip_dst = str(pkt_ip.dst)
 
-        # # install a flow to avoid packet_in next time
-        if out_port != ofproto.OFPP_FLOOD:
-            self.add_flow(datapath, msg.in_port, dst, actions)
+            if ip_dst in self.sw_to_host[dpid].keys():
+                out_port = self.sw_to_host[dpid][ip_dst]
+                self.logger.info("forward to port %s", out_port)
 
-        data = None
-        if msg.buffer_id == ofproto.OFP_NO_BUFFER:
-            data = msg.data
-
-        out = datapath.ofproto_parser.OFPPacketOut(
-            datapath=datapath, buffer_id=msg.buffer_id, in_port=msg.in_port,
-            actions=actions, data=data)
-        datapath.send_msg(out)
+                # install a flow to avoid packet_in next time 
+                actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
+                self.add_flow(datapath, msg.in_port, eth_dst, actions)
+                data = None
+                if msg.buffer_id == ofproto.OFP_NO_BUFFER:
+                    data = msg.data
+                out = datapath.ofproto_parser.OFPPacketOut(
+                    datapath=datapath, buffer_id=msg.buffer_id, in_port=msg.in_port,
+                    actions=actions, data=data)
+                datapath.send_msg(out)
 
     @set_ev_cls(ofp_event.EventOFPPortStatus, MAIN_DISPATCHER)
     def _port_status_handler(self, ev):
