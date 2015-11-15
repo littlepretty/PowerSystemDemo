@@ -7,9 +7,10 @@ from mininet.node import OVSKernelSwitch, UserSwitch
 from mininet.node import IVSSwitch
 from mininet.topo import Topo
 from mininet.cli import CLI
-from mininet.log import setLogLevel, info
+from mininet.log import setLogLevel, info, output
 from mininet.link import TCLink, Intf
 from subprocess import call
+import time
 
 class IEEE30BusTopology(Topo):
     """IEEE 39 Bus Power System's communication network topology"""
@@ -90,16 +91,27 @@ class IEEE30BusTopology(Topo):
         for i in range(13, 17):
             self.addLink('s%d' % i, 's20')
 
+def PDCPingPMU(net, timeout):
+    """Ping only from PDC to PMU"""
+    output('*** Ping: testing PDC to PMU connectivity ***\n')
+    for pdc in net.topo.pdcs:
+        pdc_host = net.getNodeByName(pdc)
+        output('%s -> ' % pdc)
+        for pmu in net.topo.pmus:
+            pmu_host = net.getNodeByName(pmu)
+            opt = '-W %s' % timeout
+            result = pdc_host.cmd('ping -c1 %s %s' % (opt,
+                pmu_host.IP()))
+            outputs = net._parsePingFull(result)
+            send, received, rttmin, rttavg, rttmax, rttdev = outputs
+            output(('%s ' % pmu) if received else 'X ')
+        output('\n')
+
 def IEEE30BusNetwork():
     """Kickoff the network"""
     topo = IEEE30BusTopology()
     net = Mininet(topo=topo, host=Host, switch=OVSKernelSwitch, controller=RemoteController, autoStaticArp=True, waitConnected=True)
-
     net.start()
-    # test connectivity
-    net.pingAll(timeout=1)
-
-    # remove 2 pdcs by tear down link
     pdc8 = net.getNodeByName('pdc8')
     pdc13 = net.getNodeByName('pdc13')
     pdc5 = net.getNodeByName('pdc5')
@@ -108,16 +120,39 @@ def IEEE30BusNetwork():
     pmu25 = net.getNodeByName('pmu25')
     s8 = net.getNodeByName('s8')
     s13 = net.getNodeByName('s13')
-    info("*** Tear down link between PDC8 and Switch 8***")
-    info("*** Tear down link between PDC13 and Switch 13***")
-    net.configLinkStatus(pdc8, s8)
-    net.configLinkStatus(pdc13, s13)
+    
+    # test connectivity
+    # PDCPingPMU(net, 1)
+    
+    net.ping([pmu15, pdc8], timeout=1)
+    net.ping([pmu23, pdc8], timeout=1)
+    net.ping([pmu25, pdc13], timeout=1)
+    time.sleep(3)
+    
+    # remove 2 pdcs by tear down link 
+    info("*** Tear down link between PDC8 and Switch 8 ***\n")
+    info("*** Tear down link between PDC13 and Switch 13 ***\n")
+    net.configLinkStatus('pdc8', 's8', 'down')
+    net.configLinkStatus('pdc13', 's13', 'down')
+    
+    # old pdc should be unreachable
+    info('*** PDC8 is isolated after being compromised ***\n')
+    net.ping([pmu15, pdc8], timeout=1)
+    net.ping([pmu23, pdc8], timeout=1)
+    info('*** PDC13 is isolated after being compromised ***\n')
+    net.ping([pmu25, pdc13], timeout=1)
+
     # test newly installed rules
+    info('*** Self-healing controller installed new rules for PMUs ***\n')
+    info('*** Rule installed to connect PMU15 and PDC5 ***\n')
     net.ping([pmu15, pdc5], timeout=1)
+    info('*** Rule installed to connect PMU23 and PDC5 ***\n')
     net.ping([pmu23, pdc5], timeout=1)
+    info('*** Rule installed to connect PMU25 and PDC5 ***\n')
     net.ping([pmu25, pdc5], timeout=1)
-    # retest connectivity
-    net.pingAll(timeout=1)
+
+    # retest connectivity 
+    # PDCPingPMU(net, 1)
 
     CLI(net)
     net.stop()

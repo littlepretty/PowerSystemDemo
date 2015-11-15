@@ -153,7 +153,7 @@ class SelfHealController(app_manager.RyuApp):
         eth_dst = pkt_eth.dst
         eth_src = pkt_eth.src
 
-        self.logger.info("packet in %s(port_%s) from %s to %s", dpid, msg.in_port, eth_src, eth_dst)
+        # self.logger.info("packet in %s(port_%s) from %s to %s", dpid, msg.in_port, eth_src, eth_dst)
         if pkt_icmp:
             pkt_ip = pkt.get_protocol(ipv4.ipv4)
             # ip_src = str(pkt_ip.src)
@@ -161,11 +161,10 @@ class SelfHealController(app_manager.RyuApp):
             # find path to dst host
             if ip_dst in self.sw_to_host[dpid].keys():
                 out_port = self.sw_to_host[dpid][ip_dst]
-                self.logger.info("forward to port %s", out_port)
-
+                # self.logger.info("forward to port %s", out_port)
                 # install a flow to avoid packet_in next time
                 actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
-                # self.add_flow(datapath, msg.in_port, eth_dst, actions)
+                self.add_flow(datapath, msg.in_port, eth_dst, actions)
                 data = None
                 if msg.buffer_id == ofproto.OFP_NO_BUFFER:
                     data = msg.data
