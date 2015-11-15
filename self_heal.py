@@ -1,4 +1,4 @@
-# Copyright (C) 2011 Nippon Telegraph and Telephone Corporation.
+# Copyright (C) 2016 IIT
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -14,7 +14,8 @@
 # limitations under the License.
 
 """
-An OpenFlow 1.0 L2 learning switch implementation.
+IEEE 30 Bus Power Network's Self-heal Controller
+Based on an OpenFlow 1.0 L2 learning switch implementation.
 """
 
 from ryu.base import app_manager
@@ -22,7 +23,6 @@ from ryu.controller import ofp_event
 from ryu.controller.handler import MAIN_DISPATCHER
 from ryu.controller.handler import set_ev_cls
 from ryu.ofproto import ofproto_v1_0
-import ryu.lib.addrconv
 from ryu.lib.mac import haddr_to_bin
 from ryu.lib.packet import packet
 from ryu.lib.packet import ethernet
@@ -36,15 +36,21 @@ class SelfHealController(app_manager.RyuApp):
 
     def __init__(self, *args, **kwargs):
         super(SelfHealController, self).__init__(*args, **kwargs)
+
         self.topology_api_app = self
+
         #store sw's dpid(int)
         self.switches = []
+
         # store the port number from sw to sw
         self.links = {}
+
         # store the port number from sw to host
         self.sw_to_host = {}
+
         for i in range(1, 21):
             self.sw_to_host[i] = {'10.0.0.%d' % i : 1}
+        # initial path for edge switches
         self.sw_to_host[1]['10.0.0.17'] = 2
         self.sw_to_host[1]['10.0.0.18'] = 3
         self.sw_to_host[1]['10.0.0.20'] = 4
@@ -91,6 +97,7 @@ class SelfHealController(app_manager.RyuApp):
 
     @set_ev_cls(event.EventSwitchEnter)
     def _get_topology_data(self, ev):
+        """automatically create sw to sw port table"""
         switch_list = get_switch(self.topology_api_app, None)
         for sw in switch_list:
             if sw.dp.id not in self.switches:
@@ -103,18 +110,26 @@ class SelfHealController(app_manager.RyuApp):
             self.links[link.src.dpid][link.dst.dpid] = link.src.port_no
 
     @set_ev_cls(event.EventPortModify)
-    def _link_delete_handler(self, ev): 
-        print "Self heal link down event"
+    def _link_delete_handler(self, ev):
+        """React to link down event"""
         port = ev.port
         dpid = port.dpid
-        port_no = port.port_no
-        event_name = port.name
+        # port_no = port.port_no
+        # event_name = port.name
+        print "Self-healing link down event of Switch %d" % dpid
         if dpid == 8:
+            # path for pmu15(10.0.0.31) to pdc5(10.0.0.5)
             self.sw_to_host[5]['10.0.0.31'] = self.links[5][18]
             self.sw_to_host[18]['10.0.0.31'] = self.links[18][8]
             self.sw_to_host[8]['10.0.0.5'] = self.links[8][18]
             self.sw_to_host[18]['10.0.0.5'] = self.links[18][5]
+            # path for pmu23(10.0.0.39) to pdc5(10.0.0.5)
+            self.sw_to_host[5]['10.0.0.39'] = self.links[5][18]
+            self.sw_to_host[18]['10.0.0.39'] = self.links[18][8]
+            self.sw_to_host[8]['10.0.0.5'] = self.links[8][18]
+            self.sw_to_host[18]['10.0.0.5'] = self.links[18][5]
         if dpid == 13:
+            # path for pmu25(10.0.0.41) to pdc5(10.0.0.5)
             self.sw_to_host[5]['10.0.0.41'] = self.links[5][18]
             self.sw_to_host[18]['10.0.0.41'] = self.links[18][20]
             self.sw_to_host[20]['10.0.0.41'] = self.links[20][13]
@@ -131,20 +146,19 @@ class SelfHealController(app_manager.RyuApp):
 
         pkt = packet.Packet(msg.data)
         pkt_eth = pkt.get_protocol(ethernet.ethernet)
-        pkt_icmp = pkt.get_protocol(icmp.icmp)
-
+        # ignore lldp packet
         if pkt_eth.ethertype == ether_types.ETH_TYPE_LLDP:
-            # ignore lldp packet
             return
+        pkt_icmp = pkt.get_protocol(icmp.icmp)
         eth_dst = pkt_eth.dst
         eth_src = pkt_eth.src
-        self.logger.info("packet in %s(port_%s) from %s to %s", dpid, msg.in_port, eth_src, eth_dst)
 
+        self.logger.info("packet in %s(port_%s) from %s to %s", dpid, msg.in_port, eth_src, eth_dst)
         if pkt_icmp:
             pkt_ip = pkt.get_protocol(ipv4.ipv4)
             # ip_src = str(pkt_ip.src)
             ip_dst = str(pkt_ip.dst)
-
+            # find path to dst host
             if ip_dst in self.sw_to_host[dpid].keys():
                 out_port = self.sw_to_host[dpid][ip_dst]
                 self.logger.info("forward to port %s", out_port)

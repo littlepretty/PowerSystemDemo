@@ -12,7 +12,9 @@ from mininet.link import TCLink, Intf
 from subprocess import call
 
 class IEEE30BusTopology(Topo):
+    """IEEE 39 Bus Power System's communication network topology"""
     def build(self):
+        """overridden to create topology"""
         self.pmus = []
         self.pdcs = []
         self.edge_switches = []
@@ -94,13 +96,34 @@ def IEEE30BusNetwork():
     net = Mininet(topo=topo, host=Host, switch=OVSKernelSwitch, controller=RemoteController, autoStaticArp=True, waitConnected=True)
 
     net.start()
+    # test connectivity
+    net.pingAll(timeout=1)
 
-    # net.pingAll()
+    # remove 2 pdcs by tear down link
+    pdc8 = net.getNodeByName('pdc8')
+    pdc13 = net.getNodeByName('pdc13')
+    pdc5 = net.getNodeByName('pdc5')
+    pmu15 = net.getNodeByName('pmu15')
+    pmu23 = net.getNodeByName('pmu23')
+    pmu25 = net.getNodeByName('pmu25')
+    s8 = net.getNodeByName('s8')
+    s13 = net.getNodeByName('s13')
+    info("*** Tear down link between PDC8 and Switch 8***")
+    info("*** Tear down link between PDC13 and Switch 13***")
+    net.configLinkStatus(pdc8, s8)
+    net.configLinkStatus(pdc13, s13)
+    # test newly installed rules
+    net.ping([pmu15, pdc5], timeout=1)
+    net.ping([pmu23, pdc5], timeout=1)
+    net.ping([pmu25, pdc5], timeout=1)
+    # retest connectivity
+    net.pingAll(timeout=1)
 
     CLI(net)
     net.stop()
 
 if __name__ == '__main__':
+    """driver for main"""
     setLogLevel( 'info' )
     IEEE30BusNetwork()
 
