@@ -116,8 +116,8 @@ class SelfHealController(app_manager.RyuApp):
         dpid = port.dpid
         # port_no = port.port_no
         # event_name = port.name
-        print "Self-healing link down event of Switch %d" % dpid
-        if dpid == 8:
+        print "Self-healing link event of Switch %d" % dpid
+        if port.is_down() and dpid == 8:
             # path for pmu15(10.0.0.31) to pdc5(10.0.0.5)
             self.sw_to_host[5]['10.0.0.31'] = self.links[5][18]
             self.sw_to_host[18]['10.0.0.31'] = self.links[18][8]
@@ -128,7 +128,7 @@ class SelfHealController(app_manager.RyuApp):
             self.sw_to_host[18]['10.0.0.39'] = self.links[18][8]
             self.sw_to_host[8]['10.0.0.5'] = self.links[8][18]
             self.sw_to_host[18]['10.0.0.5'] = self.links[18][5]
-        if dpid == 13:
+        if port.do_down() and dpid == 13:
             # path for pmu25(10.0.0.41) to pdc5(10.0.0.5)
             self.sw_to_host[5]['10.0.0.41'] = self.links[5][18]
             self.sw_to_host[18]['10.0.0.41'] = self.links[18][20]
@@ -146,14 +146,16 @@ class SelfHealController(app_manager.RyuApp):
 
         pkt = packet.Packet(msg.data)
         pkt_eth = pkt.get_protocol(ethernet.ethernet)
+        
         # ignore lldp packet
         if pkt_eth.ethertype == ether_types.ETH_TYPE_LLDP:
             return
+        
         pkt_icmp = pkt.get_protocol(icmp.icmp)
         eth_dst = pkt_eth.dst
         eth_src = pkt_eth.src
-
-        # self.logger.info("packet in %s(port_%s) from %s to %s", dpid, msg.in_port, eth_src, eth_dst)
+        self.logger.info("packet in %s(port_%s) from %s to %s", dpid, msg.in_port, eth_src, eth_dst)
+        
         if pkt_icmp:
             pkt_ip = pkt.get_protocol(ipv4.ipv4)
             # ip_src = str(pkt_ip.src)
@@ -161,7 +163,7 @@ class SelfHealController(app_manager.RyuApp):
             # find path to dst host
             if ip_dst in self.sw_to_host[dpid].keys():
                 out_port = self.sw_to_host[dpid][ip_dst]
-                # self.logger.info("forward to port %s", out_port)
+                self.logger.info("forward to port %s", out_port)
                 # install a flow to avoid packet_in next time
                 actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
                 self.add_flow(datapath, msg.in_port, eth_dst, actions)
@@ -172,6 +174,8 @@ class SelfHealController(app_manager.RyuApp):
                     datapath=datapath, buffer_id=msg.buffer_id, in_port=msg.in_port,
                     actions=actions, data=data)
                 datapath.send_msg(out)
+        else:
+            self.logger.info("Unknown type of packet")
 
     @set_ev_cls(ofp_event.EventOFPPortStatus, MAIN_DISPATCHER)
     def _port_status_handler(self, ev):
