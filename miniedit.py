@@ -1573,6 +1573,8 @@ class MiniEdit( Frame ):
             dest = self.findWidgetByName(destNode)
             dx, dy = self.canvas.coords( self.widgetToItem[ dest]  )
 
+            if 'status' in link['opts'].keys():
+                print link['opts']['status']
             self.link = self.canvas.create_line( sx, sy, dx, dy, width=4,
                                              fill='blue', tag='link' )
             c.itemconfig(self.link, tags=c.gettags(self.link)+('data',))

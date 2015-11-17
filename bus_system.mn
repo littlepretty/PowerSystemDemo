@@ -776,7 +776,7 @@
         },
         {
             "dest": "pmu15",
-            "opts": {},
+            "opts": {"status":"down"},
             "src": "s8"
         },
         {
