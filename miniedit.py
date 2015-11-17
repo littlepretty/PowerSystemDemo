@@ -1575,8 +1575,11 @@ class MiniEdit( Frame ):
 
             if 'status' in link['opts'].keys():
                 print link['opts']['status']
-            self.link = self.canvas.create_line( sx, sy, dx, dy, width=4,
-                                             fill='blue', tag='link' )
+                self.link = self.canvas.create_line( sx, sy, dx, dy, width=4, 
+                                                fill='blue', dash=(6,4,2,4), tag='link')
+            else:
+                self.link = self.canvas.create_line( sx, sy, dx, dy, width=4, 
+                                                    fill='blue', tag='link' )
             c.itemconfig(self.link, tags=c.gettags(self.link)+('data',))
             self.addLink( src, dest, linkopts=link['opts'] )
             self.createDataLinkBindings()
@@ -2903,6 +2906,8 @@ class MiniEdit( Frame ):
         net = Mininet( topo=None,
                        listenPort=dpctl,
                        build=False,
+                       autoStaticArp=True,
+                       waitConnected=True,
                        ipBase=self.appPrefs['ipBase'] )
 
         self.buildNodes(net)
