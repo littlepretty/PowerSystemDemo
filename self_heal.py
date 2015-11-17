@@ -48,7 +48,7 @@ class SelfHealController(app_manager.RyuApp):
         # store the port number from sw to host
         self.sw_to_host = {}
 
-        for i in range(1, 21):
+        for i in range(1, 17):
             self.sw_to_host[i] = {'10.0.0.%d' % i : 1}
         # initial path for edge switches
         self.sw_to_host[1]['10.0.0.17'] = 2
@@ -81,6 +81,10 @@ class SelfHealController(app_manager.RyuApp):
         self.sw_to_host[14]['10.0.0.46'] = 3
         self.sw_to_host[15]['10.0.0.44'] = 2
         self.sw_to_host[16]['10.0.0.45'] = 2
+        self.sw_to_host[17] = {}
+        self.sw_to_host[18] = {}
+        self.sw_to_host[19] = {}
+        self.sw_to_host[20] = {}
 
     def add_flow(self, datapath, in_port, dst, actions):
         ofproto = datapath.ofproto
@@ -98,6 +102,7 @@ class SelfHealController(app_manager.RyuApp):
     @set_ev_cls(event.EventSwitchEnter)
     def _get_topology_data(self, ev):
         """automatically create sw to sw port table"""
+        self.logger.info("Updating port map between switches")
         switch_list = get_switch(self.topology_api_app, None)
         for sw in switch_list:
             if sw.dp.id not in self.switches:
@@ -108,15 +113,20 @@ class SelfHealController(app_manager.RyuApp):
             if link.src.dpid not in self.links.keys():
                 self.links[link.src.dpid] = {}
             self.links[link.src.dpid][link.dst.dpid] = link.src.port_no
+        print self.links
 
     @set_ev_cls(event.EventPortModify)
     def _link_delete_handler(self, ev):
         """React to link down event"""
+        # make sure controller has global view
+        _get_topology_data()
+        
         port = ev.port
         dpid = port.dpid
         # port_no = port.port_no
         # event_name = port.name
-        print "Self-healing link event of Switch %d" % dpid
+        print "Self-healing port event of s%d" % dpid
+
         if port.is_down() and dpid == 8:
             # path for pmu15(10.0.0.31) to pdc5(10.0.0.5)
             self.sw_to_host[5]['10.0.0.31'] = self.links[5][18]
@@ -128,7 +138,7 @@ class SelfHealController(app_manager.RyuApp):
             self.sw_to_host[18]['10.0.0.39'] = self.links[18][8]
             self.sw_to_host[8]['10.0.0.5'] = self.links[8][18]
             self.sw_to_host[18]['10.0.0.5'] = self.links[18][5]
-        if port.do_down() and dpid == 13:
+        if port.is_down() and dpid == 13:
             # path for pmu25(10.0.0.41) to pdc5(10.0.0.5)
             self.sw_to_host[5]['10.0.0.41'] = self.links[5][18]
             self.sw_to_host[18]['10.0.0.41'] = self.links[18][20]
@@ -175,7 +185,11 @@ class SelfHealController(app_manager.RyuApp):
                     actions=actions, data=data)
                 datapath.send_msg(out)
         else:
-            self.logger.info("Unknown type of packet")
+            pkt_arp = pkt.get_protocol(arp.arp)
+            if pkt_arp:
+                self.logger.into("should flood ARP pkt")
+            else:
+                self.logger.info("Unknown type of packet")
 
     @set_ev_cls(ofp_event.EventOFPPortStatus, MAIN_DISPATCHER)
     def _port_status_handler(self, ev):

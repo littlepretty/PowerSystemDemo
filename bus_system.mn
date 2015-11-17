@@ -500,114 +500,9 @@
     ],
     "links": [
         {
-            "dest": "s17",
+            "dest": "s1",
             "opts": {},
-            "src": "s1"
-        },
-        {
-            "dest": "s17",
-            "opts": {},
-            "src": "s2"
-        },
-        {
-            "dest": "s17",
-            "opts": {},
-            "src": "s3"
-        },
-        {
-            "dest": "s17",
-            "opts": {},
-            "src": "s4"
-        },
-        {
-            "dest": "s18",
-            "opts": {},
-            "src": "s5"
-        },
-        {
-            "dest": "s18",
-            "opts": {},
-            "src": "s6"
-        },
-        {
-            "dest": "s18",
-            "opts": {},
-            "src": "s7"
-        },
-        {
-            "dest": "s18",
-            "opts": {},
-            "src": "s8"
-        },
-        {
-            "dest": "s9",
-            "opts": {},
-            "src": "s19"
-        },
-        {
-            "dest": "s10",
-            "opts": {},
-            "src": "s19"
-        },
-        {
-            "dest": "s19",
-            "opts": {},
-            "src": "s11"
-        },
-        {
-            "dest": "s19",
-            "opts": {},
-            "src": "s12"
-        },
-        {
-            "dest": "s20",
-            "opts": {},
-            "src": "s16"
-        },
-        {
-            "dest": "s20",
-            "opts": {},
-            "src": "s15"
-        },
-        {
-            "dest": "s20",
-            "opts": {},
-            "src": "s14"
-        },
-        {
-            "dest": "s20",
-            "opts": {},
-            "src": "s13"
-        },
-        {
-            "dest": "s18",
-            "opts": {},
-            "src": "s17"
-        },
-        {
-            "dest": "s20",
-            "opts": {},
-            "src": "s17"
-        },
-        {
-            "dest": "s19",
-            "opts": {},
-            "src": "s20"
-        },
-        {
-            "dest": "s19",
-            "opts": {},
-            "src": "s18"
-        },
-        {
-            "dest": "s19",
-            "opts": {},
-            "src": "s17"
-        },
-        {
-            "dest": "s18",
-            "opts": {},
-            "src": "s20"
+            "src": "pdc1"
         },
         {
             "dest": "s2",
@@ -685,9 +580,34 @@
             "src": "pdc16"
         },
         {
-            "dest": "s1",
+            "dest": "s18",
             "opts": {},
-            "src": "pdc1"
+            "src": "s17"
+        },
+        {
+            "dest": "s19",
+            "opts": {},
+            "src": "s17"
+        },
+        {
+            "dest": "s20",
+            "opts": {},
+            "src": "s17"
+        },
+        {
+            "dest": "s19",
+            "opts": {},
+            "src": "s18"
+        },
+        {
+            "dest": "s20",
+            "opts": {},
+            "src": "s18"
+        },
+        {
+            "dest": "s20",
+            "opts": {},
+            "src": "s19"
         },
         {
             "dest": "s1",
@@ -825,6 +745,11 @@
             "src": "s14"
         },
         {
+            "dest": "s14",
+            "opts": {},
+            "src": "pmu30"
+        },
+        {
             "dest": "pmu28",
             "opts": {},
             "src": "s15"
@@ -835,9 +760,84 @@
             "src": "s16"
         },
         {
-            "dest": "s14",
+            "dest": "s17",
             "opts": {},
-            "src": "pmu30"
+            "src": "s1"
+        },
+        {
+            "dest": "s17",
+            "opts": {},
+            "src": "s2"
+        },
+        {
+            "dest": "s17",
+            "opts": {},
+            "src": "s3"
+        },
+        {
+            "dest": "s17",
+            "opts": {},
+            "src": "s4"
+        },
+        {
+            "dest": "s18",
+            "opts": {},
+            "src": "s5"
+        },
+        {
+            "dest": "s18",
+            "opts": {},
+            "src": "s6"
+        },
+        {
+            "dest": "s18",
+            "opts": {},
+            "src": "s7"
+        },
+        {
+            "dest": "s18",
+            "opts": {},
+            "src": "s8"
+        },
+        {
+            "dest": "s9",
+            "opts": {},
+            "src": "s19"
+        },
+        {
+            "dest": "s10",
+            "opts": {},
+            "src": "s19"
+        },
+        {
+            "dest": "s19",
+            "opts": {},
+            "src": "s11"
+        },
+        {
+            "dest": "s19",
+            "opts": {},
+            "src": "s12"
+        },
+        {
+            "dest": "s20",
+            "opts": {},
+            "src": "s13"
+        },
+        {
+            "dest": "s20",
+            "opts": {},
+            "src": "s14"
+        },
+        {
+            "dest": "s20",
+            "opts": {},
+            "src": "s15"
+        },
+        {
+            "dest": "s20",
+            "opts": {},
+            "src": "s16"
         }
     ],
     "switches": [
@@ -849,7 +849,7 @@
                 ],
                 "hostname": "s13",
                 "nodeNum": 13,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "1010.0",
             "y": "331.0"
@@ -862,7 +862,7 @@
                 ],
                 "hostname": "s10",
                 "nodeNum": 10,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "1010.0",
             "y": "702.0"
@@ -875,7 +875,7 @@
                 ],
                 "hostname": "s19",
                 "nodeNum": 19,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "863.0",
             "y": "577.0"
@@ -904,7 +904,7 @@
                 ],
                 "hostname": "s12",
                 "nodeNum": 12,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "1036.0",
             "y": "478.0"
@@ -917,7 +917,7 @@
                 ],
                 "hostname": "s17",
                 "nodeNum": 17,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "495.0",
             "y": "400.0"
@@ -930,7 +930,7 @@
                 ],
                 "hostname": "s16",
                 "nodeNum": 16,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "593.0",
             "y": "257.0"
@@ -943,7 +943,7 @@
                 ],
                 "hostname": "s5",
                 "nodeNum": 5,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "308.0",
             "y": "647.0"
@@ -956,7 +956,7 @@
                 ],
                 "hostname": "s8",
                 "nodeNum": 8,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "702.0",
             "y": "728.0"
@@ -969,7 +969,7 @@
                 ],
                 "hostname": "s7",
                 "nodeNum": 7,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "525.0",
             "y": "727.0"
@@ -982,7 +982,7 @@
                 ],
                 "hostname": "s20",
                 "nodeNum": 20,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "864.0",
             "y": "401.0"
@@ -995,7 +995,7 @@
                 ],
                 "hostname": "s11",
                 "nodeNum": 11,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "1042.0",
             "y": "576.0"
@@ -1024,7 +1024,7 @@
                 ],
                 "hostname": "s3",
                 "nodeNum": 3,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "257.0",
             "y": "401.0"
@@ -1037,7 +1037,7 @@
                 ],
                 "hostname": "s6",
                 "nodeNum": 6,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "398.0",
             "y": "736.0"
@@ -1050,7 +1050,7 @@
                 ],
                 "hostname": "s15",
                 "nodeNum": 15,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "781.0",
             "y": "237.0"
@@ -1063,7 +1063,7 @@
                 ],
                 "hostname": "s18",
                 "nodeNum": 18,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "494.0",
             "y": "578.0"
@@ -1076,7 +1076,7 @@
                 ],
                 "hostname": "s9",
                 "nodeNum": 9,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "864.0",
             "y": "721.0"
@@ -1089,7 +1089,7 @@
                 ],
                 "hostname": "s14",
                 "nodeNum": 14,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "903.0",
             "y": "246.0"
@@ -1102,7 +1102,7 @@
                 ],
                 "hostname": "s4",
                 "nodeNum": 4,
-                "switchType": "default"
+                "switchType": "ovs"
             },
             "x": "277.0",
             "y": "505.0"
