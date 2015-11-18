@@ -27,16 +27,20 @@ from ryu.lib.mac import haddr_to_bin
 from ryu.lib.packet import packet
 from ryu.lib.packet import ethernet
 from ryu.lib.packet import ether_types
-from ryu.lib.packet import ipv4, icmp
+from ryu.lib.packet import ipv4, icmp, arp
 from ryu.topology import event
 from ryu.topology.api import get_switch, get_link
 
 class SelfHealController(app_manager.RyuApp):
+    """
+    SelfHeal controller based on ryu's simple switch
+    """
     OFP_VERSIONS = [ofproto_v1_0.OFP_VERSION]
 
     def __init__(self, *args, **kwargs):
         super(SelfHealController, self).__init__(*args, **kwargs)
-
+        
+        # monitor the topology changes
         self.topology_api_app = self
 
         #store sw's dpid(int)
@@ -47,7 +51,6 @@ class SelfHealController(app_manager.RyuApp):
 
         # store the port number from sw to host
         self.sw_to_host = {}
-
         for i in range(1, 17):
             self.sw_to_host[i] = {'10.0.0.%d' % i : 1}
         # initial path for edge switches
@@ -87,6 +90,11 @@ class SelfHealController(app_manager.RyuApp):
         self.sw_to_host[20] = {}
 
     def add_flow(self, datapath, in_port, dst, actions):
+        """
+        Issue FlowMod message to switch @datapath, tell it that
+        pkt to @dst should be send to @in_port. @actions should
+        be list of PacketOutput actions(usually just one element)
+        """
         ofproto = datapath.ofproto
 
         match = datapath.ofproto_parser.OFPMatch(
@@ -101,7 +109,10 @@ class SelfHealController(app_manager.RyuApp):
 
     @set_ev_cls(event.EventSwitchEnter)
     def _get_topology_data(self, ev):
-        """automatically create sw to sw port table"""
+        """
+        Automatically create sw to sw port table
+        e.g. @self.links. Notice that @ev is not used at all
+        """
         self.logger.info("Updating port map between switches")
         switch_list = get_switch(self.topology_api_app, None)
         for sw in switch_list:
@@ -117,15 +128,17 @@ class SelfHealController(app_manager.RyuApp):
 
     @set_ev_cls(event.EventPortModify)
     def _link_delete_handler(self, ev):
-        """React to link down event"""
-        # make sure controller has global view
-        _get_topology_data()
-        
+        """
+        React to link down event
+        """
         port = ev.port
         dpid = port.dpid
         # port_no = port.port_no
         # event_name = port.name
         print "Self-healing port event of s%d" % dpid
+        
+        # make sure controller has global view
+        self._get_topology_data(None)
 
         if port.is_down() and dpid == 8:
             # path for pmu15(10.0.0.31) to pdc5(10.0.0.5)
@@ -149,6 +162,9 @@ class SelfHealController(app_manager.RyuApp):
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
+        """
+        Ping(ICMP) packet handler
+        """
         msg = ev.msg
         datapath = msg.datapath
         ofproto = datapath.ofproto
@@ -187,12 +203,15 @@ class SelfHealController(app_manager.RyuApp):
         else:
             pkt_arp = pkt.get_protocol(arp.arp)
             if pkt_arp:
-                self.logger.into("should flood ARP pkt")
+                self.logger.info("should flood ARP pkt")
             else:
                 self.logger.info("Unknown type of packet")
 
     @set_ev_cls(ofp_event.EventOFPPortStatus, MAIN_DISPATCHER)
     def _port_status_handler(self, ev):
+        """
+        More general than EventPortModify?
+        """
         msg = ev.msg
         reason = msg.reason
         port_no = msg.desc.port_no
