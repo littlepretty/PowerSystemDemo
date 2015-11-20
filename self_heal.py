@@ -32,28 +32,31 @@ from ryu.topology import event
 from ryu.topology.api import get_switch, get_link
 
 class SelfHealController(app_manager.RyuApp):
-    """
-    SelfHeal controller based on ryu's simple switch
-    """
+    "SelfHeal controller based on ryu's simple switch"
     OFP_VERSIONS = [ofproto_v1_0.OFP_VERSION]
 
     def __init__(self, *args, **kwargs):
+        """
+        Attributes:
+            @topology_api_app: monitor the topology changes by 
+                "ryu-manager --observe-links"
+            @switches(list of int): store every sw's dpid
+            @links(2-level dict): store the port number from 
+                sw(level-1 key, dpid) to sw(level-2 key, dpid)
+            @sw_to_host(dict): store the port number from sw(level-1
+            key, dpid) to host(level-2 key, IP string)
+        """
         super(SelfHealController, self).__init__(*args, **kwargs)
         
-        # monitor the topology changes
         self.topology_api_app = self
-
-        #store sw's dpid(int)
-        self.switches = []
-
-        # store the port number from sw to sw
+        self.switches = [] 
         self.links = {}
-
-        # store the port number from sw to host
         self.sw_to_host = {}
+
+        # init path from edge sw to PDCs
         for i in range(1, 17):
             self.sw_to_host[i] = {'10.0.0.%d' % i : 1}
-        # initial path for edge switches
+        # initial path from edge sw to PMUs
         self.sw_to_host[1]['10.0.0.17'] = 2
         self.sw_to_host[1]['10.0.0.18'] = 3
         self.sw_to_host[1]['10.0.0.20'] = 4
@@ -90,10 +93,10 @@ class SelfHealController(app_manager.RyuApp):
         self.sw_to_host[20] = {}
 
     def add_flow(self, datapath, in_port, dst, actions):
-        """
-        Issue FlowMod message to switch @datapath, tell it that
-        pkt to @dst should be send to @in_port. @actions should
-        be list of PacketOutput actions(usually just one element)
+        """Issue FlowMod message:
+            to switch @datapath, tell it that pkt to @dst should be 
+            send to @in_port. 
+            @actions: list of PacketOutput actions(usually just one element)
         """
         ofproto = datapath.ofproto
 
@@ -109,8 +112,7 @@ class SelfHealController(app_manager.RyuApp):
 
     @set_ev_cls(event.EventSwitchEnter)
     def _get_topology_data(self, ev):
-        """
-        Automatically create sw to sw port table
+        """Automatically create sw to sw port table
         e.g. @self.links. Notice that @ev is not used at all
         """
         self.logger.info("Updating port map between switches")
@@ -128,8 +130,8 @@ class SelfHealController(app_manager.RyuApp):
 
     @set_ev_cls(event.EventPortModify)
     def _link_delete_handler(self, ev):
-        """
-        React to link down event
+        """React to link down event
+        @ev: from which extract Port object
         """
         port = ev.port
         dpid = port.dpid
@@ -162,8 +164,7 @@ class SelfHealController(app_manager.RyuApp):
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
-        """
-        Ping(ICMP) packet handler
+        """Ping(ICMP) packet handler
         """
         msg = ev.msg
         datapath = msg.datapath
@@ -209,8 +210,7 @@ class SelfHealController(app_manager.RyuApp):
 
     @set_ev_cls(ofp_event.EventOFPPortStatus, MAIN_DISPATCHER)
     def _port_status_handler(self, ev):
-        """
-        More general than EventPortModify?
+        """More general than EventPortModify?
         """
         msg = ev.msg
         reason = msg.reason

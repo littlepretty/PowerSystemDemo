@@ -11,11 +11,12 @@ from mininet.log import setLogLevel, info, output
 from mininet.link import TCLink, Intf
 from subprocess import call
 import time
+import argparse
 
 class IEEE30BusTopology(Topo):
     """IEEE 39 Bus Power System's communication network topology"""
     def build(self):
-        """overridden to create topology"""
+        """Overridden to create topology"""
         self.pmus = []
         self.pdcs = []
         self.edge_switches = []
@@ -93,10 +94,10 @@ class IEEE30BusTopology(Topo):
 
 def PDCPingPMU(net, timeout):
     """Ping only from PDC to PMU"""
-    output('*** Ping: testing PDC to PMU connectivity ***\n')
+    output('****** Ping: testing PDC to PMU connectivity ******\n')
     for pdc in net.topo.pdcs:
         pdc_host = net.getNodeByName(pdc)
-        output('%s -> ' % pdc)
+        output('\t%s -> ' % pdc)
         for pmu in net.topo.pmus:
             pmu_host = net.getNodeByName(pmu)
             opt = '-W %s' % timeout
@@ -120,45 +121,60 @@ def IEEE30BusNetwork():
     pmu25 = net.getNodeByName('pmu25')
     s8 = net.getNodeByName('s8')
     s13 = net.getNodeByName('s13')
+   
+    time.sleep(3) 
     
-    # test connectivity
-    # PDCPingPMU(net, 1)
-    
-    net.ping([pmu15, pdc8], timeout=1)
-    net.ping([pmu23, pdc8], timeout=1)
-    net.ping([pmu25, pdc13], timeout=1)
-    time.sleep(3)
-    
+    if args.full == True:
+        # test connectivity
+        PDCPingPMU(net, 1)
+    else:
+        info('****** Quick test for connectivity between PMU and PDC ******\n')
+        info('*** Test connection to PDC8 ***\n')
+        net.ping([pmu15, pdc8], timeout=1)
+        net.ping([pmu23, pdc8], timeout=1)
+        info('*** Test connection to PDC13 ***\n)')
+        net.ping([pmu25, pdc13], timeout=1)
+        
     # remove 2 pdcs by tear down link 
-    info("*** Tear down link between PDC8 and Switch 8 ***\n")
-    info("*** Tear down link between PDC13 and Switch 13 ***\n")
+    info("\n****** Tear down link between PDC8 and Switch 8 ******\n")
+    info("****** Tear down link between PDC13 and Switch 13 ******\n")
     net.configLinkStatus('pdc8', 's8', 'down')
     net.configLinkStatus('pdc13', 's13', 'down')
     
     # old pdc should be unreachable
-    info('*** PDC8 is isolated after being compromised ***\n')
+    info('\n****** PDC8 is isolated after being compromised ******\n')
+    info('*** Test connection to compromised PDC8 ***\n')
     net.ping([pmu15, pdc8], timeout=1)
     net.ping([pmu23, pdc8], timeout=1)
-    info('*** PDC13 is isolated after being compromised ***\n')
+    info('\n****** PDC13 is isolated after being compromised ******\n')
+    info('*** Test connection to compromised PDC13 ***\n')
     net.ping([pmu25, pdc13], timeout=1)
 
     # test newly installed rules
-    info('*** Self-healing controller installed new rules for PMUs ***\n')
-    info('*** Rule installed to connect PMU15 and PDC5 ***\n')
+    info('\n****** Self-healing controller installed new rules for PMUs ******\n')
+    info('*** Test rules installed to connect PMU15 to PDC5 ***\n')
     net.ping([pmu15, pdc5], timeout=1)
-    info('*** Rule installed to connect PMU23 and PDC5 ***\n')
+    info('*** Test rules installed to connect PMU23 to PDC5 ***\n')
     net.ping([pmu23, pdc5], timeout=1)
-    info('*** Rule installed to connect PMU25 and PDC5 ***\n')
+    info('*** Test rules installed to connect PMU25 to PDC5 ***\n')
     net.ping([pmu25, pdc5], timeout=1)
 
-    # retest connectivity 
-    # PDCPingPMU(net, 1)
-
+    if args.full == True:
+        # retest connectivity 
+        PDCPingPMU(net, 1)
+        info('\n****** Full test is finished ******\n\n')
+    else:
+        info('\n****** Short test is finished ******\n\n')
     CLI(net)
     net.stop()
 
 if __name__ == '__main__':
-    """driver for main"""
+    """Driver for main"""
     setLogLevel( 'info' )
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-f', '--full', action="store_true",
+            default=False, help='Run full ping tests')
+    args = parser.parse_args()
+
     IEEE30BusNetwork()
 
