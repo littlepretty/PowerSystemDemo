@@ -1,0 +1,103 @@
+reating network
+*** Adding controller
+Unable to contact the remote controller at 127.0.0.1:6633
+*** Adding hosts:
+pdc1 pdc2 pdc3 pdc4 pdc5 pdc6 pdc7 pdc8 pdc9 pdc10 pdc11 pdc12 pdc13
+pdc14 pdc15 pdc16 pmu1 pmu2 pmu3 pmu4 pmu5 pmu6 pmu7 pmu8 pmu9 pmu10
+pmu11 pmu12 pmu13 pmu14 pmu15 pmu16 pmu17 pmu18 pmu19 pmu20 pmu21 pmu22
+pmu23 pmu24 pmu25 pmu26 pmu27 pmu28 pmu29 pmu30 
+*** Adding switches:
+s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s18 s19 s20 
+*** Adding links:
+(pdc1, s1) (pdc2, s2) (pdc3, s3) (pdc4, s4) (pdc5, s5) (pdc6, s6) (pdc7,
+s7) (pdc8, s8) (pdc9, s9) (pdc10, s10) (pdc11, s11) (pdc12, s12) (pdc13,
+s13) (pdc14, s14) (pdc15, s15) (pdc16, s16) (s1, pmu1) (s1, pmu2) (s1,
+pmu4) (s1, s17) (s2, pmu3) (s2, s17) (s3, pmu5) (s3, pmu7) (s3, s17)
+(s4, pmu6) (s4, pmu8) (s4, s17) (s5, pmu9) (s5, pmu11) (s5, s18) (s6,
+pmu10) (s6, pmu17) (s6, pmu20) (s6, pmu21) (s6, s18) (s7, pmu12) (s7,
+pmu13) (s7, pmu14) (s7, s18) (s8, pmu15) (s8, pmu18) (s8, pmu23) (s8,
+s18) (s9, pmu16) (s9, s19) (s10, pmu19) (s10, s19) (s11, pmu22) (s11,
+s19) (s12, pmu24) (s12, s19) (s13, pmu25) (s13, pmu26) (s13, s20) (s14,
+pmu27) (s14, pmu30) (s14, s20) (s15, pmu28) (s15, s20) (s16, pmu29)
+(s16, s20) (s17, s18) (s17, s19) (s17, s20) (s18, s19) (s18, s20) (s19,
+s20) 
+*** Configuring hosts
+pdc1 pdc2 pdc3 pdc4 pdc5 pdc6 pdc7 pdc8 pdc9 pdc10 pdc11 pdc12 pdc13
+pdc14 pdc15 pdc16 pmu1 pmu2 pmu3 pmu4 pmu5 pmu6 pmu7 pmu8 pmu9 pmu10
+pmu11 pmu12 pmu13 pmu14 pmu15 pmu16 pmu17 pmu18 pmu19 pmu20 pmu21 pmu22
+pmu23 pmu24 pmu25 pmu26 pmu27 pmu28 pmu29 pmu30 
+*** Starting controller
+c0 
+*** Starting 20 switches
+s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s18 s19 s20
+...
+*** Waiting for switches to connect
+s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s18 s19 s20 
+****** Ping: testing PDC to PMU connectivity ******
+    pdc1 -> pmu1 pmu2 X pmu4 X X X X X X X X X X X X X X X X X X X X X X X X X X 
+    pdc2 -> X X pmu3 X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+    pdc3 -> X X X X pmu5 X pmu7 X X X X X X X X X X X X X X X X X X X X X X X 
+    pdc4 -> X X X X X pmu6 X pmu8 X X X X X X X X X X X X X X X X X X X X X X 
+    pdc5 -> X X X X X X X X pmu9 X pmu11 X X X X X X X X X X X X X X X X X X X 
+    pdc6 -> X X X X X X X X X pmu10 X X X X X X pmu17 X X pmu20 pmu21 X X X X X X X X X 
+    pdc7 -> X X X X X X X X X X X pmu12 pmu13 pmu14 X X X X X X X X X X X X X X X X 
+    pdc8 -> X X X X X X X X X X X X X X pmu15 X X pmu18 X X X X pmu23 X X X X X X X 
+    pdc9 -> X X X X X X X X X X X X X X X pmu16 X X X X X X X X X X X X X X 
+    pdc10 -> X X X X X X X X X X X X X X X X X X pmu19 X X X X X X X X X X X 
+    pdc11 -> X X X X X X X X X X X X X X X X X X X X X pmu22 X X X X X X X X 
+    pdc12 -> X X X X X X X X X X X X X X X X X X X X X X X pmu24 X X X X X X 
+    pdc13 -> X X X X X X X X X X X X X X X X X X X X X X X X pmu25 pmu26 X X X X 
+    pdc14 -> X X X X X X X X X X X X X X X X X X X X X X X X X X pmu27 X X pmu30 
+    pdc15 -> X X X X X X X X X X X X X X X X X X X X X X X X X X X pmu28 X X 
+    pdc16 -> X X X X X X X X X X X X X X X X X X X X X X X X X X X X pmu29 X 
+
+****** Tear down link between PDC8 and Switch 8 ******
+****** Tear down link between PDC13 and Switch 13 ******
+
+****** PDC8 is isolated after being compromised ******
+*** Test connection to compromised PDC8 ***
+pmu15 -> X 
+pdc8 -> X 
+*** Results: 100% dropped (0/2 received)
+pmu23 -> X 
+pdc8 -> X 
+*** Results: 100% dropped (0/2 received)
+
+****** PDC13 is isolated after being compromised ******
+*** Test connection to compromised PDC13 ***
+pmu25 -> X 
+pdc13 -> X 
+*** Results: 100% dropped (0/2 received)
+
+****** Self-healing controller installed new rules for PMUs ******
+*** Test rules installed to connect PMU15 to PDC5 ***
+pmu15 -> pdc5 
+pdc5 -> pmu15 
+*** Results: 0% dropped (2/2 received)
+*** Test rules installed to connect PMU23 to PDC5 ***
+pmu23 -> pdc5 
+pdc5 -> pmu23 
+*** Results: 0% dropped (2/2 received)
+*** Test rules installed to connect PMU25 to PDC5 ***
+pmu25 -> pdc5 
+pdc5 -> pmu25 
+*** Results: 0% dropped (2/2 received)
+****** Ping: testing PDC to PMU connectivity ******
+    pdc1 -> pmu1 pmu2 X pmu4 X X X X X X X X X X X X X X X X X X X X X X X X X X 
+    pdc2 -> X X pmu3 X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+    pdc3 -> X X X X pmu5 X pmu7 X X X X X X X X X X X X X X X X X X X X X X X 
+    pdc4 -> X X X X X pmu6 X pmu8 X X X X X X X X X X X X X X X X X X X X X X 
+    pdc5 -> X X X X X X X X pmu9 X pmu11 X X X pmu15 X X X X X X X pmu23 X pmu25 X X X X X 
+    pdc6 -> X X X X X X X X X pmu10 X X X X X X pmu17 X X pmu20 pmu21 X X X X X X X X X 
+    pdc7 -> X X X X X X X X X X X pmu12 pmu13 pmu14 X X X X X X X X X X X X X X X X 
+    pdc8 -> X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+    pdc9 -> X X X X X X X X X X X X X X X pmu16 X X X X X X X X X X X X X X 
+    pdc10 -> X X X X X X X X X X X X X X X X X X pmu19 X X X X X X X X X X X 
+    pdc11 -> X X X X X X X X X X X X X X X X X X X X X pmu22 X X X X X X X X 
+    pdc12 -> X X X X X X X X X X X X X X X X X X X X X X X pmu24 X X X X X X 
+    pdc13 -> X X X X X X X X X X X X X X X X X X X X X X X X X X X X X X 
+    pdc14 -> X X X X X X X X X X X X X X X X X X X X X X X X X X pmu27 X X pmu30 
+    pdc15 -> X X X X X X X X X X X X X X X X X X X X X X X X X X X pmu28 X X 
+    pdc16 -> X X X X X X X X X X X X X X X X X X X X X X X X X X X X pmu29 X 
+
+****** Full test is finished ******
