@@ -1,4 +1,4 @@
-# Copyright (C) 2016 IIT
+# Copyright (C) 2016 Jiaqi Yan, IIT
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -37,14 +37,16 @@ class SelfHealController(app_manager.RyuApp):
 
     def __init__(self, *args, **kwargs):
         """
+        Create controller object
+
         Attributes:
-            @topology_api_app: monitor the topology changes by 
+            topology_api_app: monitor the topology changes by 
                 "ryu-manager --observe-links"
-            @switches(list of int): store every sw's dpid
-            @links(2-level dict): store the port number from 
+            switches(list of int): store every sw's dpid
+            links(2-level dict): store the port number from 
                 sw(level-1 key, dpid) to sw(level-2 key, dpid)
-            @sw_to_host(dict): store the port number from sw(level-1
-            key, dpid) to host(level-2 key, IP string)
+            sw_to_host(dict): store the port number from sw(level-1 key, dpid) 
+                to host(level-2 key, IP string)
         """
         super(SelfHealController, self).__init__(*args, **kwargs)
         
@@ -93,10 +95,10 @@ class SelfHealController(app_manager.RyuApp):
         self.sw_to_host[20] = {}
 
     def add_flow(self, datapath, in_port, dst, actions):
-        """Issue FlowMod message:
-            to switch @datapath, tell it that pkt to @dst should be 
-            send to @in_port. 
-            @actions: list of PacketOutput actions(usually just one element)
+        """Issue FlowMod message to switch @datapath
+        
+        tell it that pkt to @dst should be send to @in_port. 
+        @actions: list of PacketOutput actions(usually just one element)
         """
         ofproto = datapath.ofproto
 
@@ -112,8 +114,9 @@ class SelfHealController(app_manager.RyuApp):
 
     @set_ev_cls(event.EventSwitchEnter)
     def _get_topology_data(self, ev):
-        """Automatically create sw to sw port table
-        e.g. @self.links. Notice that @ev is not used at all
+        """Automatically create sw to sw port table @self.links. 
+        
+        Notice that @ev is not used at all
         """
         self.logger.info("Updating port map between switches")
         switch_list = get_switch(self.topology_api_app, None)
@@ -131,7 +134,8 @@ class SelfHealController(app_manager.RyuApp):
     @set_ev_cls(event.EventPortModify)
     def _link_delete_handler(self, ev):
         """React to link down event
-        @ev: from which extract Port object
+        
+        @ev: from which we can extract Port object
         """
         port = ev.port
         dpid = port.dpid
@@ -164,8 +168,7 @@ class SelfHealController(app_manager.RyuApp):
 
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
-        """Ping(ICMP) packet handler
-        """
+        """Ping(ICMP) packet handler"""
         msg = ev.msg
         datapath = msg.datapath
         ofproto = datapath.ofproto
@@ -173,19 +176,17 @@ class SelfHealController(app_manager.RyuApp):
 
         pkt = packet.Packet(msg.data)
         pkt_eth = pkt.get_protocol(ethernet.ethernet)
-        
+        eth_dst = pkt_eth.dst
+        eth_src = pkt_eth.src 
         # ignore lldp packet
         if pkt_eth.ethertype == ether_types.ETH_TYPE_LLDP:
             return
+        self.logger.info("packet in %s(port_%s) from %s to %s", \
+                            dpid, msg.in_port, eth_src, eth_dst)        
         
         pkt_icmp = pkt.get_protocol(icmp.icmp)
-        eth_dst = pkt_eth.dst
-        eth_src = pkt_eth.src
-        self.logger.info("packet in %s(port_%s) from %s to %s", dpid, msg.in_port, eth_src, eth_dst)
-        
         if pkt_icmp:
             pkt_ip = pkt.get_protocol(ipv4.ipv4)
-            # ip_src = str(pkt_ip.src)
             ip_dst = str(pkt_ip.dst)
             # find path to dst host
             if ip_dst in self.sw_to_host[dpid].keys():
@@ -197,21 +198,14 @@ class SelfHealController(app_manager.RyuApp):
                 data = None
                 if msg.buffer_id == ofproto.OFP_NO_BUFFER:
                     data = msg.data
-                out = datapath.ofproto_parser.OFPPacketOut(
-                    datapath=datapath, buffer_id=msg.buffer_id, in_port=msg.in_port,
-                    actions=actions, data=data)
+                out = datapath.ofproto_parser.OFPPacketOut( \
+                                datapath=datapath, buffer_id=msg.buffer_id, \
+                                in_port=msg.in_port, actions=actions, data=data)
                 datapath.send_msg(out)
-        else:
-            pkt_arp = pkt.get_protocol(arp.arp)
-            if pkt_arp:
-                self.logger.info("should flood ARP pkt")
-            else:
-                self.logger.info("Unknown type of packet")
 
     @set_ev_cls(ofp_event.EventOFPPortStatus, MAIN_DISPATCHER)
     def _port_status_handler(self, ev):
-        """More general than EventPortModify?
-        """
+        """More general than EventPortModify?"""
         msg = ev.msg
         reason = msg.reason
         port_no = msg.desc.port_no

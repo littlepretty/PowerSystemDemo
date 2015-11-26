@@ -122,7 +122,7 @@ def IEEE30BusNetwork():
     s8 = net.getNodeByName('s8')
     s13 = net.getNodeByName('s13')
    
-    time.sleep(3) 
+    time.sleep(1) 
     
     if args.full == True:
         # test connectivity
@@ -140,7 +140,7 @@ def IEEE30BusNetwork():
     info("****** Tear down link between PDC13 and Switch 13 ******\n")
     net.configLinkStatus('pdc8', 's8', 'down')
     net.configLinkStatus('pdc13', 's13', 'down')
-    
+
     # old pdc should be unreachable
     info('\n****** PDC8 is isolated after being compromised ******\n')
     info('*** Test connection to compromised PDC8 ***\n')
@@ -150,6 +150,7 @@ def IEEE30BusNetwork():
     info('*** Test connection to compromised PDC13 ***\n')
     net.ping([pmu25, pdc13], timeout=1)
 
+
     # test newly installed rules
     info('\n****** Self-healing controller installed new rules for PMUs ******\n')
     info('*** Test rules installed to connect PMU15 to PDC5 ***\n')
@@ -158,6 +159,7 @@ def IEEE30BusNetwork():
     net.ping([pmu23, pdc5], timeout=1)
     info('*** Test rules installed to connect PMU25 to PDC5 ***\n')
     net.ping([pmu25, pdc5], timeout=1)
+    time.sleep(3)
 
     if args.full == True:
         # retest connectivity 
