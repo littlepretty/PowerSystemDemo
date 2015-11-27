@@ -27,7 +27,7 @@ from ryu.lib.mac import haddr_to_bin
 from ryu.lib.packet import packet
 from ryu.lib.packet import ethernet
 from ryu.lib.packet import ether_types
-from ryu.lib.packet import ipv4, icmp, arp
+from ryu.lib.packet import ipv4, icmp
 from ryu.topology import event
 from ryu.topology.api import get_switch, get_link
 
@@ -40,18 +40,18 @@ class SelfHealController(app_manager.RyuApp):
         Create controller object
 
         Attributes:
-            topology_api_app: monitor the topology changes by 
+            topology_api_app: monitor the topology changes by
                 "ryu-manager --observe-links"
             switches(list of int): store every sw's dpid
-            links(2-level dict): store the port number from 
+            links(2-level dict): store the port number from
                 sw(level-1 key, dpid) to sw(level-2 key, dpid)
-            sw_to_host(dict): store the port number from sw(level-1 key, dpid) 
+            sw_to_host(dict): store the port number from sw(level-1 key, dpid)
                 to host(level-2 key, IP string)
         """
         super(SelfHealController, self).__init__(*args, **kwargs)
-        
+
         self.topology_api_app = self
-        self.switches = [] 
+        self.switches = []
         self.links = {}
         self.sw_to_host = {}
 
@@ -94,28 +94,10 @@ class SelfHealController(app_manager.RyuApp):
         self.sw_to_host[19] = {}
         self.sw_to_host[20] = {}
 
-    def add_flow(self, datapath, in_port, dst, actions):
-        """Issue FlowMod message to switch @datapath
-        
-        tell it that pkt to @dst should be send to @in_port. 
-        @actions: list of PacketOutput actions(usually just one element)
-        """
-        ofproto = datapath.ofproto
-
-        match = datapath.ofproto_parser.OFPMatch(
-                in_port=in_port, dl_dst=haddr_to_bin(dst))
-
-        mod = datapath.ofproto_parser.OFPFlowMod(
-            datapath=datapath, match=match, cookie=0,
-            command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
-            priority=ofproto.OFP_DEFAULT_PRIORITY,
-            flags=ofproto.OFPFF_SEND_FLOW_REM, actions=actions)
-        datapath.send_msg(mod)
-
     @set_ev_cls(event.EventSwitchEnter)
     def _get_topology_data(self, ev):
-        """Automatically create sw to sw port table @self.links. 
-        
+        """Automatically create sw to sw port table @self.links.
+
         Notice that @ev is not used at all
         """
         self.logger.info("Updating port map between switches")
@@ -134,19 +116,19 @@ class SelfHealController(app_manager.RyuApp):
     @set_ev_cls(event.EventPortModify)
     def _link_delete_handler(self, ev):
         """React to link down event
-        
+
         @ev: from which we can extract Port object
         """
         port = ev.port
         dpid = port.dpid
         # port_no = port.port_no
         # event_name = port.name
-        print "Self-healing port event of s%d" % dpid
-        
+
         # make sure controller has global view
         self._get_topology_data(None)
 
-        if port.is_down() and dpid == 8:
+        if port.is_down() and dpid == 13:
+            raw_input("Start self-healing by press Enter...")
             # path for pmu15(10.0.0.31) to pdc5(10.0.0.5)
             self.sw_to_host[5]['10.0.0.31'] = self.links[5][18]
             self.sw_to_host[18]['10.0.0.31'] = self.links[18][8]
@@ -157,7 +139,7 @@ class SelfHealController(app_manager.RyuApp):
             self.sw_to_host[18]['10.0.0.39'] = self.links[18][8]
             self.sw_to_host[8]['10.0.0.5'] = self.links[8][18]
             self.sw_to_host[18]['10.0.0.5'] = self.links[18][5]
-        if port.is_down() and dpid == 13:
+
             # path for pmu25(10.0.0.41) to pdc5(10.0.0.5)
             self.sw_to_host[5]['10.0.0.41'] = self.links[5][18]
             self.sw_to_host[18]['10.0.0.41'] = self.links[18][20]
@@ -166,6 +148,25 @@ class SelfHealController(app_manager.RyuApp):
             self.sw_to_host[20]['10.0.0.5'] = self.links[20][18]
             self.sw_to_host[18]['10.0.0.5'] = self.links[18][5]
 
+    def add_flow(self, datapath, in_port, dst, actions):
+        """Issue FlowMod message to switch @datapath
+        
+        tell it that pkt to @dst should be send to @in_port. 
+        @actions: list of PacketOutput actions(usually just one element)
+        """
+        ofproto = datapath.ofproto
+
+        match = datapath.ofproto_parser.OFPMatch(
+                in_port=in_port, dl_dst=haddr_to_bin(dst))
+        # match = datapath.ofproto_parser.OFPMatch(in_port=in_port, nw_dst=nw_dst)
+
+        mod = datapath.ofproto_parser.OFPFlowMod(
+            datapath=datapath, match=match, cookie=0,
+            command=ofproto.OFPFC_ADD, idle_timeout=0, hard_timeout=0,
+            priority=ofproto.OFP_DEFAULT_PRIORITY,
+            flags=ofproto.OFPFF_SEND_FLOW_REM, actions=actions)
+        datapath.send_msg(mod)
+    
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
     def _packet_in_handler(self, ev):
         """Ping(ICMP) packet handler"""
@@ -177,13 +178,13 @@ class SelfHealController(app_manager.RyuApp):
         pkt = packet.Packet(msg.data)
         pkt_eth = pkt.get_protocol(ethernet.ethernet)
         eth_dst = pkt_eth.dst
-        eth_src = pkt_eth.src 
+        eth_src = pkt_eth.src
         # ignore lldp packet
         if pkt_eth.ethertype == ether_types.ETH_TYPE_LLDP:
             return
         self.logger.info("packet in %s(port_%s) from %s to %s", \
-                            dpid, msg.in_port, eth_src, eth_dst)        
-        
+                            dpid, msg.in_port, eth_src, eth_dst)
+
         pkt_icmp = pkt.get_protocol(icmp.icmp)
         if pkt_icmp:
             pkt_ip = pkt.get_protocol(ipv4.ipv4)

@@ -92,50 +92,62 @@ class IEEE30BusTopology(Topo):
         for i in range(13, 17):
             self.addLink('s%d' % i, 's20')
 
-def PDCPingPMU(net, timeout):
+def AllPDCPingAllPMU(net, timeout):
     """Ping only from PDC to PMU"""
     output('****** Ping: testing PDC to PMU connectivity ******\n')
     for pdc in net.topo.pdcs:
+        PDCPingAllPMU(net, pdc, timeout)
+
+def PDCPingAllPMU(net, pdc, timeout):
+    pdc_host = net.getNodeByName(pdc)
+    output(' %s -> ' % pdc)
+    for pmu in net.topo.pmus:
+        pmu_host = net.getNodeByName(pmu)
+        opt = '-W %s' % timeout
+        result = pdc_host.cmd('ping -c1 %s %s' % (opt,
+            pmu_host.IP()))
+        outputs = net._parsePingFull(result)
+        send, received, rttmin, rttavg, rttmax, rttdev = outputs
+        output(('%s ' % pmu) if received else 'X ') 
+    output('\n')    
+
+def AllPMUPingAllPDC(net, timeout):
+    """Ping only from PMU to PDC"""
+    output('****** Ping: testing PMU to PDC connectivity ******\n')
+    for pmu in net.topo.pmus:
+        PMUPingAllPDC(net, pmu, timeout)
+
+def PMUPingAllPDC(net, pmu, timeout):
+    pmu_host = net.getNodeByName(pmu)
+    output(' %s -> ' % pmu)
+    for pdc in net.topo.pdcs:
+        opt = '-c1 -W %s' % timeout
         pdc_host = net.getNodeByName(pdc)
-        output('\t%s -> ' % pdc)
-        for pmu in net.topo.pmus:
-            pmu_host = net.getNodeByName(pmu)
-            opt = '-W %s' % timeout
-            result = pdc_host.cmd('ping -c1 %s %s' % (opt,
-                pmu_host.IP()))
-            outputs = net._parsePingFull(result)
-            send, received, rttmin, rttavg, rttmax, rttdev = outputs
-            output(('%s ' % pmu) if received else 'X ')
-        output('\n')
+        result = pmu_host.cmd('ping %s %s' % (opt, pdc_host.IP()))
+        outputs = net._parsePingFull(result)
+        send, received, rttmin, rttavg, rttmax, rttdev = outputs
+        output(('%s ' % pdc) if received else 'X ')
+    output('\n')    
 
 def IEEE30BusNetwork():
     """Kickoff the network"""
     topo = IEEE30BusTopology()
-    net = Mininet(topo=topo, host=Host, switch=OVSKernelSwitch, controller=RemoteController, autoStaticArp=True, waitConnected=True)
+    net = Mininet(topo=topo, host=Host, switch=OVSKernelSwitch, \
+            controller=RemoteController, autoStaticArp=True, waitConnected=True)
     net.start()
-    pdc8 = net.getNodeByName('pdc8')
-    pdc13 = net.getNodeByName('pdc13')
-    pdc5 = net.getNodeByName('pdc5')
-    pmu15 = net.getNodeByName('pmu15')
-    pmu23 = net.getNodeByName('pmu23')
-    pmu25 = net.getNodeByName('pmu25')
-    s8 = net.getNodeByName('s8')
-    s13 = net.getNodeByName('s13')
-   
-    time.sleep(1) 
-    
-    if args.full == True:
+
+    if args.short:
         # test connectivity
-        PDCPingPMU(net, 1)
-    else:
         info('****** Quick test for connectivity between PMU and PDC ******\n')
         info('*** Test connection to PDC8 ***\n')
-        net.ping([pmu15, pdc8], timeout=1)
-        net.ping([pmu23, pdc8], timeout=1)
+        PMUPingAllPDC(net, 'pmu15', timeout=1)
+        PMUPingAllPDC(net, 'pmu23', timeout=1)
         info('*** Test connection to PDC13 ***\n)')
-        net.ping([pmu25, pdc13], timeout=1)
-        
-    # remove 2 pdcs by tear down link 
+        PMUPingAllPDC(net, 'pmu25', timeout=1)
+    else:
+        AllPMUPingAllPDC(net, 1)
+
+    # remove 2 pdcs by tear down link
     info("\n****** Tear down link between PDC8 and Switch 8 ******\n")
     info("****** Tear down link between PDC13 and Switch 13 ******\n")
     net.configLinkStatus('pdc8', 's8', 'down')
@@ -144,37 +156,31 @@ def IEEE30BusNetwork():
     # old pdc should be unreachable
     info('\n****** PDC8 is isolated after being compromised ******\n')
     info('*** Test connection to compromised PDC8 ***\n')
-    net.ping([pmu15, pdc8], timeout=1)
-    net.ping([pmu23, pdc8], timeout=1)
+    PMUPingAllPDC(net, 'pmu15', 1)
+    PMUPingAllPDC(net, 'pmu23', 1)
     info('\n****** PDC13 is isolated after being compromised ******\n')
     info('*** Test connection to compromised PDC13 ***\n')
-    net.ping([pmu25, pdc13], timeout=1)
+    PMUPingAllPDC(net, 'pmu25', 1)
 
-
+    raw_input("Press Enter to continue...")
     # test newly installed rules
     info('\n****** Self-healing controller installed new rules for PMUs ******\n')
     info('*** Test rules installed to connect PMU15 to PDC5 ***\n')
-    net.ping([pmu15, pdc5], timeout=1)
+    PMUPingAllPDC(net, 'pmu15', timeout=1)
+    info('\n')
     info('*** Test rules installed to connect PMU23 to PDC5 ***\n')
-    net.ping([pmu23, pdc5], timeout=1)
+    PMUPingAllPDC(net, 'pmu23', timeout=1)
     info('*** Test rules installed to connect PMU25 to PDC5 ***\n')
-    net.ping([pmu25, pdc5], timeout=1)
-    time.sleep(3)
+    PMUPingAllPDC(net, 'pmu25', timeout=1)
 
-    if args.full == True:
-        # retest connectivity 
-        PDCPingPMU(net, 1)
-        info('\n****** Full test is finished ******\n\n')
-    else:
-        info('\n****** Short test is finished ******\n\n')
     CLI(net)
     net.stop()
 
 if __name__ == '__main__':
     """Driver for main"""
-    setLogLevel( 'info' )
+    setLogLevel('info')
     parser = argparse.ArgumentParser()
-    parser.add_argument('-f', '--full', action="store_true",
+    parser.add_argument('-s', '--short', action="store_true", \
             default=False, help='Run full ping tests')
     args = parser.parse_args()
 

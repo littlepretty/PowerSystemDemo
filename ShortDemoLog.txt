@@ -34,49 +34,32 @@ s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s18 s19 s20
 *** Waiting for switches to connect
 s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s18 s19 s20 
 
-****** Short test for connectivity between PMU and PDC ******   
+*** Quick test for connectivity between PMU and PDC ******
 *** Test connection to PDC8 ***
-pmu15 -> pdc8 
-pdc8 -> pmu15 
-*** Results: 0% dropped (2/2 received)
-pmu23 -> pdc8 
-pdc8 -> pmu23 
-*** Results: 0% dropped (2/2 received)
+pmu15 -> X X X X X X X pdc8 X X X X X X X X 
+pmu23 -> X X X X X X X pdc8 X X X X X X X X 
 *** Test connection to PDC13 ***
-pmu25 -> pdc13 
-pdc13 -> pmu25 
-*** Results: 0% dropped (2/2 received)
+pmu25 -> X X X X X X X X X X X X pdc13 X X X 
 
 ****** Tear down link between PDC8 and Switch 8 ******
 ****** Tear down link between PDC13 and Switch 13 ******
 
 ****** PDC8 is isolated after being compromised ******
 *** Test connection to compromised PDC8 ***
-pmu15 -> X 
-pdc8 -> X 
-*** Results: 100% dropped (0/2 received)
-pmu23 -> X 
-pdc8 -> X 
-*** Results: 100% dropped (0/2 received)
+pmu15 -> X X X X X X X X X X X X X X X X 
+pmu23 -> X X X X X X X X X X X X X X X X 
 
 ****** PDC13 is isolated after being compromised ******
 *** Test connection to compromised PDC13 ***
-pmu25 -> X 
-pdc13 -> X 
-*** Results: 100% dropped (0/2 received)
+pmu25 -> X X X X X X X X X X X X X X X X 
+Press Enter to continue...
 
 ****** Self-healing controller installed new rules for PMUs ******
 *** Test rules installed to connect PMU15 to PDC5 ***
-pmu15 -> pdc5 
-pdc5 -> pmu15 
-*** Results: 0% dropped (2/2 received)
+pmu15 -> X X X X pdc5 X X X X X X X X X X X 
 *** Test rules installed to connect PMU23 to PDC5 ***
-pmu23 -> pdc5 
-pdc5 -> pmu23 
-*** Results: 0% dropped (2/2 received)
+pmu23 -> X X X X pdc5 X X X X X X X X X X X 
 *** Test rules installed to connect PMU25 to PDC5 ***
-pmu25 -> pdc5 
-pdc5 -> pmu25 
-*** Results: 0% dropped (2/2 received)
+pmu25 -> X X X X pdc5 X X X X X X X X X X X 
 
-****** Short test is finished ******
+
