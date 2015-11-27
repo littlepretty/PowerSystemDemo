@@ -156,9 +156,8 @@ class SelfHealController(app_manager.RyuApp):
         """
         ofproto = datapath.ofproto
 
-        match = datapath.ofproto_parser.OFPMatch(
-                in_port=in_port, dl_dst=haddr_to_bin(dst))
-        # match = datapath.ofproto_parser.OFPMatch(in_port=in_port, nw_dst=nw_dst)
+        match = datapath.ofproto_parser.OFPMatch(in_port=in_port, dl_dst=haddr_to_bin(dst))
+        #match = datapath.ofproto_parser.OFPMatch(in_port=in_port, nw_dst=dst)
 
         mod = datapath.ofproto_parser.OFPFlowMod(
             datapath=datapath, match=match, cookie=0,
@@ -196,6 +195,7 @@ class SelfHealController(app_manager.RyuApp):
                 # install a flow to avoid packet_in next time
                 actions = [datapath.ofproto_parser.OFPActionOutput(out_port)]
                 self.add_flow(datapath, msg.in_port, eth_dst, actions)
+		#self.add_flow(datapath, msg.in_port, ip_dst, actions)
                 data = None
                 if msg.buffer_id == ofproto.OFP_NO_BUFFER:
                     data = msg.data
@@ -203,7 +203,7 @@ class SelfHealController(app_manager.RyuApp):
                                 datapath=datapath, buffer_id=msg.buffer_id, \
                                 in_port=msg.in_port, actions=actions, data=data)
                 datapath.send_msg(out)
-
+ 
     @set_ev_cls(ofp_event.EventOFPPortStatus, MAIN_DISPATCHER)
     def _port_status_handler(self, ev):
         """More general than EventPortModify?"""
