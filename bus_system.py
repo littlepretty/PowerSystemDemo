@@ -129,6 +129,12 @@ def PMUPingAllPDC(net, pmu, timeout):
         output(('%s ' % pdc) if received else 'X ')
     output('\n')    
 
+def PMUPingPDC(net, pmu, pdc, timeout):
+    pmu_host = net.getNodeByName(pmu)
+    pdc_host = net.getNodeByName(pdc)
+    result = pmu_host.cmd('ping -c1 %s' % pdc_host.IP())
+    output(result)
+
 def IEEE30BusNetwork():
     """Kickoff the network"""
     topo = IEEE30BusTopology()
@@ -140,7 +146,9 @@ def IEEE30BusNetwork():
         # test connectivity
         info('****** Quick test for connectivity between PMU and PDC ******\n')
         info('*** Test connection to PDC8 ***\n')
-        PMUPingAllPDC(net, 'pmu15', timeout=1)
+        PMUPingPDC(net, 'pmu15', 'pdc8', 1)
+        PMUPingPDC(net, 'pmu9', 'pdc5', 1)
+        # PMUPingAllPDC(net, 'pmu15', timeout=1)
         # PMUPingAllPDC(net, 'pmu23', timeout=1)
         # info('*** Test connection to PDC13 ***\n)')
         # PMUPingAllPDC(net, 'pmu25', timeout=1)
@@ -156,19 +164,20 @@ def IEEE30BusNetwork():
     # old pdc should be unreachable
     info('\n****** PDC8 is isolated after being compromised ******\n')
     info('*** Test connection to compromised PDC8 ***\n')
-    PMUPingAllPDC(net, 'pmu15', 1)
+    PMUPingPDC(net, 'pmu15', 'pdc8', 1)
+    # PMUPingAllPDC(net, 'pmu15', 1)
     # PMUPingAllPDC(net, 'pmu23', 1)
     # info('\n****** PDC13 is isolated after being compromised ******\n')
     # info('*** Test connection to compromised PDC13 ***\n')
     # PMUPingAllPDC(net, 'pmu25', 1)
 
     raw_input("Press Enter to continue...")
-    # test newly installed rules
-    time.sleep(3)
+    # test newly installed rules 
     info('\n****** Self-healing controller installed new rules for PMUs ******\n')
     info('*** Test rules installed to connect PMU15 to PDC5 ***\n')
-    PMUPingAllPDC(net, 'pmu15', timeout=1)
-    info('\n')
+    PMUPingPDC(net, 'pmu15', 'pdc5', 1)
+    # PMUPingAllPDC(net, 'pmu15', timeout=1)
+    # info('\n')
     # info('*** Test rules installed to connect PMU23 to PDC5 ***\n')
     # PMUPingAllPDC(net, 'pmu23', timeout=1)
     # info('*** Test rules installed to connect PMU25 to PDC5 ***\n')
