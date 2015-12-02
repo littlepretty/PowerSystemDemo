@@ -9,9 +9,11 @@ from mininet.topo import Topo
 from mininet.cli import CLI
 from mininet.log import setLogLevel, info, output
 from mininet.link import TCLink, Intf
-from subprocess import call
+
 import time
 import argparse
+import subprocess
+import os
 
 class IEEE30BusTopology(Topo):
     """IEEE 39 Bus Power System's communication network topology"""
@@ -135,26 +137,35 @@ def PMUPingPDC(net, pmu, pdc, timeout):
     result = pmu_host.cmd('ping -c1 %s' % pdc_host.IP())
     output(result)
 
+def DumpRule(net, sw_name):
+    sw = net.getNodeByName(sw_name)
+    info('Dump OpenFlow rules on %s\n' % sw)
+    os.system("ovs-ofctl dump-flows %s" % sw_name)
+
 def IEEE30BusNetwork():
     """Kickoff the network"""
     topo = IEEE30BusTopology()
     net = Mininet(topo=topo, host=Host, switch=OVSKernelSwitch, \
             controller=RemoteController, autoStaticArp=True, waitConnected=True)
     net.start()
+    changed_sw = ['s8', 's13', 's18', 's20', 's5']
 
     if args.short:
         # test connectivity
         info('****** Quick test for connectivity between PMU and PDC ******\n')
         info('*** Test connection to PDC8 ***\n')
-        PMUPingPDC(net, 'pmu15', 'pdc8', 1)
-        PMUPingPDC(net, 'pmu9', 'pdc5', 1)
-        # PMUPingAllPDC(net, 'pmu15', timeout=1)
-        # PMUPingAllPDC(net, 'pmu23', timeout=1)
-        # info('*** Test connection to PDC13 ***\n)')
-        # PMUPingAllPDC(net, 'pmu25', timeout=1)
+        # PMUPingPDC(net, 'pmu15', 'pdc8', 1)
+        # PMUPingPDC(net, 'pmu9', 'pdc5', 1)
+        PMUPingAllPDC(net, 'pmu15', timeout=1)
+        PMUPingAllPDC(net, 'pmu23', timeout=1)
+        info('*** Test connection to PDC13 ***\n)')
+        PMUPingAllPDC(net, 'pmu25', timeout=1)
     else:
         AllPMUPingAllPDC(net, 1)
-
+    
+    for sw in changed_sw:
+        DumpRule(net, sw)
+    
     # remove 2 pdcs by tear down link
     info("\n****** Tear down link between PDC8 and Switch 8 ******\n")
     info("****** Tear down link between PDC13 and Switch 13 ******\n")
@@ -164,24 +175,29 @@ def IEEE30BusNetwork():
     # old pdc should be unreachable
     info('\n****** PDC8 is isolated after being compromised ******\n')
     info('*** Test connection to compromised PDC8 ***\n')
-    PMUPingPDC(net, 'pmu15', 'pdc8', 1)
-    # PMUPingAllPDC(net, 'pmu15', 1)
-    # PMUPingAllPDC(net, 'pmu23', 1)
-    # info('\n****** PDC13 is isolated after being compromised ******\n')
-    # info('*** Test connection to compromised PDC13 ***\n')
-    # PMUPingAllPDC(net, 'pmu25', 1)
+    # PMUPingPDC(net, 'pmu15', 'pdc8', 1)
+    PMUPingAllPDC(net, 'pmu15', 1)
+    PMUPingAllPDC(net, 'pmu23', 1)
+    info('\n****** PDC13 is isolated after being compromised ******\n')
+    info('*** Test connection to compromised PDC13 ***\n')
+    PMUPingAllPDC(net, 'pmu25', 1)
 
     raw_input("Press Enter to continue...")
     # test newly installed rules 
     info('\n****** Self-healing controller installed new rules for PMUs ******\n')
     info('*** Test rules installed to connect PMU15 to PDC5 ***\n')
-    PMUPingPDC(net, 'pmu15', 'pdc5', 1)
-    # PMUPingAllPDC(net, 'pmu15', timeout=1)
-    # info('\n')
-    # info('*** Test rules installed to connect PMU23 to PDC5 ***\n')
-    # PMUPingAllPDC(net, 'pmu23', timeout=1)
-    # info('*** Test rules installed to connect PMU25 to PDC5 ***\n')
-    # PMUPingAllPDC(net, 'pmu25', timeout=1)
+    # PMUPingPDC(net, 'pmu15', 'pdc5', 1)
+    PMUPingAllPDC(net, 'pmu15', timeout=1)
+    info('*** Test rules installed to connect PMU23 to PDC5 ***\n')
+    PMUPingAllPDC(net, 'pmu23', timeout=1)
+    info('*** Test rules installed to connect PMU25 to PDC5 ***\n')
+    PMUPingAllPDC(net, 'pmu25', timeout=1)
+
+    for sw in changed_sw:
+        DumpRule(net, sw)
+
+    if not args.short:
+        AllPMUPingAllPDC(net, 1)
 
     CLI(net)
     net.stop()
