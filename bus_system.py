@@ -103,7 +103,7 @@ def AllPDCPingAllPMU(net, timeout):
 
 def PDCPingAllPMU(net, pdc, timeout):
     pdc_host = net.getNodeByName(pdc)
-    output(' %s -> ' % pdc)
+    output(' 5%s -> ' % pdc)
     for pmu in net.topo.pmus:
         pmu_host = net.getNodeByName(pmu)
         opt = '-W %s' % timeout
@@ -111,7 +111,7 @@ def PDCPingAllPMU(net, pdc, timeout):
             pmu_host.IP()))
         outputs = net._parsePingFull(result)
         send, received, rttmin, rttavg, rttmax, rttdev = outputs
-        output(('%s ' % pmu) if received else 'X ') 
+        output(('%5s ' % pmu) if received else 'X ') 
     output('\n')    
 
 def AllPMUPingAllPDC(net, timeout):
@@ -123,14 +123,14 @@ def AllPMUPingAllPDC(net, timeout):
 
 def PMUPingAllPDC(net, pmu, timeout):
     pmu_host = net.getNodeByName(pmu)
-    output(' %s -> ' % pmu)
+    output(' %5s -> ' % pmu)
     for pdc in net.topo.pdcs:
         opt = '-c1 -W %s' % timeout
         pdc_host = net.getNodeByName(pdc)
         result = pmu_host.cmd('ping %s %s' % (opt, pdc_host.IP()))
         outputs = net._parsePingFull(result)
         send, received, rttmin, rttavg, rttmax, rttdev = outputs
-        output(('%s ' % pdc) if received else 'X ')
+        output(('%5s ' % pdc) if received else 'X ')
     output('\n')    
 
 
@@ -202,8 +202,8 @@ def IEEE30BusNetwork():
     for sw in changed_sw:
         DumpRule(net, sw)
 
-    if not args.short:
-        AllPMUPingAllPDC(net, 1)
+    # if not args.short:
+        # AllPMUPingAllPDC(net, 1)
 
     CLI(net)
     net.stop()
