@@ -184,37 +184,37 @@ class SelfHealController(app_manager.RyuApp):
         if port.is_down() and dpid == 13:
             raw_input("Start self-healing by press Enter...")
 
-            # sw_dpid_list = [8, 18, 5]
-            # dst = '10.0.0.5'
-            # prev_addr_list = ['10.0.0.31', '8', '18']
-            # next_addr_list = ['18', '5', '10.0.0.5']
-            # self.add_path(sw_dpid_list, dst, prev_addr_list, next_addr_list)
+            sw_dpid_list = [8, 18, 5]
+            dst = '10.0.0.5'
+            prev_addr_list = ['10.0.0.31', '8', '18']
+            next_addr_list = ['18', '5', '10.0.0.5']
+            self.add_path(sw_dpid_list, dst, prev_addr_list, next_addr_list)
 
-            # sw_dpid_list = [5, 18, 8]
-            # dst = '10.0.0.31'
-            # prev_addr_list = ['10.0.0.5', '5', '18']
-            # next_addr_list = ['18', '8', '10.0.0.31']
-            # self.add_path(sw_dpid_list, dst, prev_addr_list, next_addr_list)
+            sw_dpid_list = [5, 18, 8]
+            dst = '10.0.0.31'
+            prev_addr_list = ['10.0.0.5', '5', '18']
+            next_addr_list = ['18', '8', '10.0.0.31']
+            self.add_path(sw_dpid_list, dst, prev_addr_list, next_addr_list)
 
-            # path for pmu15(10.0.0.31) to pdc5(10.0.0.5) 
-            self.links[5]['10.0.0.31'] = self.links[5]['18']
-            self.links[18]['10.0.0.31'] = self.links[18]['8']
-            self.links[8]['10.0.0.5'] = self.links[8]['18']
-            self.links[18]['10.0.0.5'] = self.links[18]['5']
+#             # path for pmu15(10.0.0.31) to pdc5(10.0.0.5) 
+            # self.links[5]['10.0.0.31'] = self.links[5]['18']
+            # self.links[18]['10.0.0.31'] = self.links[18]['8']
+            # self.links[8]['10.0.0.5'] = self.links[8]['18']
+            # self.links[18]['10.0.0.5'] = self.links[18]['5']
 
-            # path for pmu23(10.0.0.39) to pdc5(10.0.0.5)
-            self.links[5]['10.0.0.39'] = self.links[5]['18']
-            self.links[18]['10.0.0.39'] = self.links[18]['8']
-            self.links[8]['10.0.0.5'] = self.links[8]['18']
-            self.links[18]['10.0.0.5'] = self.links[18]['5']
+            # # path for pmu23(10.0.0.39) to pdc5(10.0.0.5)
+            # self.links[5]['10.0.0.39'] = self.links[5]['18']
+            # self.links[18]['10.0.0.39'] = self.links[18]['8']
+            # self.links[8]['10.0.0.5'] = self.links[8]['18']
+            # self.links[18]['10.0.0.5'] = self.links[18]['5']
 
-            # # path for pmu25(10.0.0.41) to pdc5(10.0.0.5)
-            self.links[5]['10.0.0.41'] = self.links[5]['18']
-            self.links[18]['10.0.0.41'] = self.links[18]['20']
-            self.links[20]['10.0.0.41'] = self.links[20]['13']
-            self.links[13]['10.0.0.5'] = self.links[13]['20']
-            self.links[20]['10.0.0.5'] = self.links[20]['18']
-            self.links[18]['10.0.0.5'] = self.links[18]['5']
+            # # # path for pmu25(10.0.0.41) to pdc5(10.0.0.5)
+            # self.links[5]['10.0.0.41'] = self.links[5]['18']
+            # self.links[18]['10.0.0.41'] = self.links[18]['20']
+            # self.links[20]['10.0.0.41'] = self.links[20]['13']
+            # self.links[13]['10.0.0.5'] = self.links[13]['20']
+            # self.links[20]['10.0.0.5'] = self.links[20]['18']
+#             self.links[18]['10.0.0.5'] = self.links[18]['5']
 
     
     @set_ev_cls(ofp_event.EventOFPPacketIn, MAIN_DISPATCHER)
