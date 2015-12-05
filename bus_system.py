@@ -29,19 +29,19 @@ class IEEE30BusTopology(Topo):
 
         # pmu hosts
         for i in range(1, self.num_pmus + 1):
-            h = self.addHost('pmu%d' % i)
+            h = self.addHost('PMU%d' % i)
             self.pmus.append(h)
 
         # pdc switches
         for i in range(1, self.num_pdcs + 1):
-            h = self.addHost('pdc%d' % i)
+            h = self.addHost('PDC%d' % i)
             self.pdcs.append(h)
         for i in range(1, self.num_switches + 1):
             sw = self.addSwitch('s%d' % i)
             if i < 17:
                 self.edge_switches.append(sw)
                 # link pdc to edge switches
-                self.addLink('pdc%i' % i, 's%i' % i)
+                self.addLink('PDC%i' % i, 's%i' % i)
             else:
                 self.core_switches.append(sw)
         # link core switches together
@@ -53,36 +53,36 @@ class IEEE30BusTopology(Topo):
         self.addLink('s19', 's20')
 
         # link pmu to edge switches
-        self.addLink('s1', 'pmu1')
-        self.addLink('s1', 'pmu2')
-        self.addLink('s1', 'pmu4')
-        self.addLink('s2', 'pmu3')
-        self.addLink('s3', 'pmu5')
-        self.addLink('s3', 'pmu7')
-        self.addLink('s4', 'pmu6')
-        self.addLink('s4', 'pmu8')
-        self.addLink('s5', 'pmu9')
-        self.addLink('s5', 'pmu11')
-        self.addLink('s6', 'pmu10')
-        self.addLink('s6', 'pmu17')
-        self.addLink('s6', 'pmu20')
-        self.addLink('s6', 'pmu21')
-        self.addLink('s7', 'pmu12')
-        self.addLink('s7', 'pmu13')
-        self.addLink('s7', 'pmu14')
-        self.addLink('s8', 'pmu15')
-        self.addLink('s8', 'pmu18')
-        self.addLink('s8', 'pmu23')
-        self.addLink('s9', 'pmu16')
-        self.addLink('s10', 'pmu19')
-        self.addLink('s11', 'pmu22')
-        self.addLink('s12', 'pmu24')
-        self.addLink('s13', 'pmu25')
-        self.addLink('s13', 'pmu26')
-        self.addLink('s14', 'pmu27')
-        self.addLink('s14', 'pmu30')
-        self.addLink('s15', 'pmu28')
-        self.addLink('s16', 'pmu29')
+        self.addLink('s1', 'PMU1')
+        self.addLink('s1', 'PMU2')
+        self.addLink('s1', 'PMU4')
+        self.addLink('s2', 'PMU3')
+        self.addLink('s3', 'PMU5')
+        self.addLink('s3', 'PMU7')
+        self.addLink('s4', 'PMU6')
+        self.addLink('s4', 'PMU8')
+        self.addLink('s5', 'PMU9')
+        self.addLink('s5', 'PMU11')
+        self.addLink('s6', 'PMU10')
+        self.addLink('s6', 'PMU17')
+        self.addLink('s6', 'PMU20')
+        self.addLink('s6', 'PMU21')
+        self.addLink('s7', 'PMU12')
+        self.addLink('s7', 'PMU13')
+        self.addLink('s7', 'PMU14')
+        self.addLink('s8', 'PMU15')
+        self.addLink('s8', 'PMU18')
+        self.addLink('s8', 'PMU23')
+        self.addLink('s9', 'PMU16')
+        self.addLink('s10', 'PMU19')
+        self.addLink('s11', 'PMU22')
+        self.addLink('s12', 'PMU24')
+        self.addLink('s13', 'PMU25')
+        self.addLink('s13', 'PMU26')
+        self.addLink('s14', 'PMU27')
+        self.addLink('s14', 'PMU30')
+        self.addLink('s15', 'PMU28')
+        self.addLink('s16', 'PMU29')
 
         # link core to edge switches
         for i in range(1, 5):
@@ -99,6 +99,7 @@ def AllPDCPingAllPMU(net, timeout):
     output('****** Ping: testing PDC to PMU connectivity ******\n')
     for pdc in net.topo.pdcs:
         PDCPingAllPMU(net, pdc, timeout)
+    time.sleep(5)
 
 def PDCPingAllPMU(net, pdc, timeout):
     pdc_host = net.getNodeByName(pdc)
@@ -118,6 +119,7 @@ def AllPMUPingAllPDC(net, timeout):
     output('****** Ping: testing PMU to PDC connectivity ******\n')
     for pmu in net.topo.pmus:
         PMUPingAllPDC(net, pmu, timeout)
+    time.sleep(5)
 
 def PMUPingAllPDC(net, pmu, timeout):
     pmu_host = net.getNodeByName(pmu)
@@ -131,16 +133,20 @@ def PMUPingAllPDC(net, pmu, timeout):
         output(('%s ' % pdc) if received else 'X ')
     output('\n')    
 
+
 def PMUPingPDC(net, pmu, pdc, timeout):
+    time.sleep(5)
     pmu_host = net.getNodeByName(pmu)
     pdc_host = net.getNodeByName(pdc)
-    result = pmu_host.cmd('ping -c1 %s' % pdc_host.IP())
+    output('%s(%s) ping -c1 %s(%s)' % (pmu, pmu_host.IP(), pdc, pdc_host.IP()))
+    result = pmu_host.cmd('ping -W %d -c1 %s' % (timeout, pdc_host.IP()))
     output(result)
 
 def DumpRule(net, sw_name):
     sw = net.getNodeByName(sw_name)
     info('Dump OpenFlow rules on %s\n' % sw)
     os.system("ovs-ofctl dump-flows %s" % sw_name)
+    time.sleep(5)
 
 def IEEE30BusNetwork():
     """Kickoff the network"""
@@ -148,51 +154,51 @@ def IEEE30BusNetwork():
     net = Mininet(topo=topo, host=Host, switch=OVSKernelSwitch, \
             controller=RemoteController, autoStaticArp=True, waitConnected=True)
     net.start()
-    changed_sw = ['s8', 's13', 's18', 's20', 's5']
+    changed_sw = ['s5', 's8', 's13', 's18', 's20']
 
     if args.short:
         # test connectivity
         info('****** Quick test for connectivity between PMU and PDC ******\n')
-        info('*** Test connection to PDC8 ***\n')
-        # PMUPingPDC(net, 'pmu15', 'pdc8', 1)
-        # PMUPingPDC(net, 'pmu9', 'pdc5', 1)
-        PMUPingAllPDC(net, 'pmu15', timeout=1)
-        # PMUPingAllPDC(net, 'pmu23', timeout=1)
-        # info('*** Test connection to PDC13 ***\n)')
-        # PMUPingAllPDC(net, 'pmu25', timeout=1)
+        info('*** PING Test from PMU15 PMU23 and PMU25 ***\n')
+        # PMUPingPDC(net, 'PMU15', 'PDC8', 1)
+        # PMUPingPDC(net, 'PMU9', 'PDC5', 1)
+        PMUPingAllPDC(net, 'PMU15', timeout=1)
+        PMUPingAllPDC(net, 'PMU23', timeout=1) 
+        PMUPingAllPDC(net, 'PMU25', timeout=1)
     else:
         AllPMUPingAllPDC(net, 1)
-    
+   
+    info('\n****** Show rules on critical switches ******\n')
     for sw in changed_sw:
         DumpRule(net, sw)
     
     # remove 2 pdcs by tear down link
-    info("\n****** Tear down link between PDC8 and Switch 8 ******\n")
-    info("****** Tear down link between PDC13 and Switch 13 ******\n")
-    net.configLinkStatus('pdc8', 's8', 'down')
-    net.configLinkStatus('pdc13', 's13', 'down')
+    # info("\n****** Tear down link between PDC8 and Switch 8 ******\n")
+    # info("****** Tear down link between PDC13 and Switch 13 ******\n")
+    net.configLinkStatus('PDC8', 's8', 'down')
+    net.configLinkStatus('PDC13', 's13', 'down')
 
     # old pdc should be unreachable
     info('\n****** PDC8 is isolated after being compromised ******\n')
-    info('*** Test connection to compromised PDC8 ***\n')
-    # PMUPingPDC(net, 'pmu15', 'pdc8', 1)
-    PMUPingAllPDC(net, 'pmu15', 1)
-    # PMUPingAllPDC(net, 'pmu23', 1)
-    # info('\n****** PDC13 is isolated after being compromised ******\n')
-    # info('*** Test connection to compromised PDC13 ***\n')
-    # PMUPingAllPDC(net, 'pmu25', 1)
+    info('*** PING Test from PMU15 PMU23 ***\n') 
+    # PMUPingPDC(net, 'PMU15', 'PDC8', 1)
+    PMUPingAllPDC(net, 'PMU15', 1)
+    PMUPingAllPDC(net, 'PMU23', 1)
+    info('\n****** PDC13 is isolated after being compromised ******\n')
+    info('*** PING Test from PMU25 ***\n')
+    PMUPingAllPDC(net, 'PMU25', 1)
 
-    raw_input("Press Enter to continue...")
+    raw_input("\n****** Self-heal controller installed new rules to reconnect PMUs ******\n")
     # test newly installed rules 
-    info('\n****** Self-healing controller installed new rules for PMUs ******\n')
     info('*** Test rules installed to connect PMU15 to PDC5 ***\n')
-    # PMUPingPDC(net, 'pmu15', 'pdc5', 1)
-    PMUPingAllPDC(net, 'pmu15', timeout=1)
-    # info('*** Test rules installed to connect PMU23 to PDC5 ***\n')
-    # PMUPingAllPDC(net, 'pmu23', timeout=1)
-    # info('*** Test rules installed to connect PMU25 to PDC5 ***\n')
-    # PMUPingAllPDC(net, 'pmu25', timeout=1)
-
+    # PMUPingPDC(net, 'PMU15', 'PDC5', 1)
+    PMUPingAllPDC(net, 'PMU15', timeout=1)
+    info('*** Test rules installed to connect PMU23 to PDC5 ***\n')
+    PMUPingAllPDC(net, 'PMU23', timeout=1)
+    info('*** Test rules installed to connect PMU25 to PDC5 ***\n')
+    PMUPingAllPDC(net, 'PMU25', timeout=1)
+    
+    info('\n****** Show rules on critical switches ******\n')
     for sw in changed_sw:
         DumpRule(net, sw)
 
