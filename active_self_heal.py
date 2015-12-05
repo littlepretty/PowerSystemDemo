@@ -20,6 +20,7 @@ Based on an OpenFlow 1.0 L2 learning switch implementation.
 
 from ryu.base import app_manager
 from ryu.controller import ofp_event
+from ryu.controller import dpset
 from ryu.controller.handler import CONFIG_DISPATCHER, MAIN_DISPATCHER
 from ryu.controller.handler import set_ev_cls
 from ryu.ofproto import ofproto_v1_3
@@ -34,6 +35,11 @@ from ryu.topology.api import get_all_switch, get_all_link, get_all_host
 class SelfHealController(app_manager.RyuApp):
     "SelfHeal controller based on ryu's simple switch"
     OFP_VERSIONS = [ofproto_v1_3.OFP_VERSION]
+   
+    # this app should run with ryu.controller.dpset
+    _CONTEXTS = {
+            'dpset': dpset.DPSet,
+    }
 
     def __init__(self, *args, **kwargs):
         """
@@ -42,7 +48,8 @@ class SelfHealController(app_manager.RyuApp):
         Attributes:
             topology_api_app: monitor the topology changes by
                 "ryu-manager --observe-links"
-            switches(list of int): store every sw's dpid
+            dpset: see switches
+            switches(dict): sw's dpid -> sw object defined in topology
             links(2-level dict): store the port number from 
                 src sw[level-1 key, (int)dpid] to 
                 dst(sw or host)[level-2 key, str(dpid or IP)]
@@ -50,8 +57,12 @@ class SelfHealController(app_manager.RyuApp):
         super(SelfHealController, self).__init__(*args, **kwargs)
 
         self.topology_api_app = self
-
-        self.dpset = {}
+        
+        # old way to have the datapath to every switch
+        self.dpset = kwargs['dpset']
+        # new way to get 'dpset'
+        # self.switches = {}
+        
         self.links = {} 
         self.hosts = {}
         # init path from edge sw to PDCs
@@ -116,7 +127,7 @@ class SelfHealController(app_manager.RyuApp):
     def add_path(self, sw_dpid_list, dst, prev_addr_list, next_addr_list):
         """Add rules on sw in sw_dpid_list to create a flow path"""
         for idx, sw_dpid in enumerate(sw_dpid_list):
-            datapath = self.dpset[sw_dpid]
+            datapath = self.dpset.get(sw_dpid)
             parser = datapath.ofproto_parser
 
             prev_addr = prev_addr_list[idx]
@@ -125,7 +136,7 @@ class SelfHealController(app_manager.RyuApp):
             out_port = self.links[sw_dpid][next_addr]
 
             actions = [parser.OFPActionOutput(out_port)]
-            match = parser.OFPMatch(in_port=in_port, eth_dst=dst)
+            match = parser.OFPMatch(in_port=in_port, ipv4_dst=dst)
             self.add_flow(datapath, 2, match, actions)
 
             self.logger.info('install rule on sw%d: in_port %d, out_port %d, dst %s', datapath.id, in_port, out_port, dst)
@@ -148,10 +159,10 @@ class SelfHealController(app_manager.RyuApp):
         link_list = get_all_link(self.topology_api_app)
 
         # create dpid to datapath mapping        
-        for sw in sw_list:
-            if sw.dp.id not in self.dpset:
-                print 'Enter sw %d' % sw.dp.id
-                self.dpset[sw.dp.id] = sw.dp
+        # for sw in sw_list:
+            # if sw.dp.id not in self.dpset:
+                # print 'Enter sw %d' % sw.dp.id
+                # self.dpset[sw.dp.id] = sw
 
         for link in link_list:
             if link.src.dpid not in self.links:
@@ -172,19 +183,20 @@ class SelfHealController(app_manager.RyuApp):
 
         if port.is_down() and dpid == 13:
             raw_input("Start self-healing by press Enter...")
-            # path for pmu15(10.0.0.31) to pdc5(10.0.0.5)
+
             # sw_dpid_list = [8, 18, 5]
-            # dst = self.hosts['10.0.0.5']
+            # dst = '10.0.0.5'
             # prev_addr_list = ['10.0.0.31', '8', '18']
             # next_addr_list = ['18', '5', '10.0.0.5']
             # self.add_path(sw_dpid_list, dst, prev_addr_list, next_addr_list)
 
             # sw_dpid_list = [5, 18, 8]
-            # dst = self.hosts['10.0.0.31']
+            # dst = '10.0.0.31'
             # prev_addr_list = ['10.0.0.5', '5', '18']
             # next_addr_list = ['18', '8', '10.0.0.31']
             # self.add_path(sw_dpid_list, dst, prev_addr_list, next_addr_list)
 
+            # path for pmu15(10.0.0.31) to pdc5(10.0.0.5) 
             self.links[5]['10.0.0.31'] = self.links[5]['18']
             self.links[18]['10.0.0.31'] = self.links[18]['8']
             self.links[8]['10.0.0.5'] = self.links[8]['18']

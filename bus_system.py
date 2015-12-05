@@ -157,9 +157,9 @@ def IEEE30BusNetwork():
         # PMUPingPDC(net, 'pmu15', 'pdc8', 1)
         # PMUPingPDC(net, 'pmu9', 'pdc5', 1)
         PMUPingAllPDC(net, 'pmu15', timeout=1)
-        PMUPingAllPDC(net, 'pmu23', timeout=1)
-        info('*** Test connection to PDC13 ***\n)')
-        PMUPingAllPDC(net, 'pmu25', timeout=1)
+        # PMUPingAllPDC(net, 'pmu23', timeout=1)
+        # info('*** Test connection to PDC13 ***\n)')
+        # PMUPingAllPDC(net, 'pmu25', timeout=1)
     else:
         AllPMUPingAllPDC(net, 1)
     
@@ -177,10 +177,10 @@ def IEEE30BusNetwork():
     info('*** Test connection to compromised PDC8 ***\n')
     # PMUPingPDC(net, 'pmu15', 'pdc8', 1)
     PMUPingAllPDC(net, 'pmu15', 1)
-    PMUPingAllPDC(net, 'pmu23', 1)
-    info('\n****** PDC13 is isolated after being compromised ******\n')
-    info('*** Test connection to compromised PDC13 ***\n')
-    PMUPingAllPDC(net, 'pmu25', 1)
+    # PMUPingAllPDC(net, 'pmu23', 1)
+    # info('\n****** PDC13 is isolated after being compromised ******\n')
+    # info('*** Test connection to compromised PDC13 ***\n')
+    # PMUPingAllPDC(net, 'pmu25', 1)
 
     raw_input("Press Enter to continue...")
     # test newly installed rules 
@@ -188,10 +188,10 @@ def IEEE30BusNetwork():
     info('*** Test rules installed to connect PMU15 to PDC5 ***\n')
     # PMUPingPDC(net, 'pmu15', 'pdc5', 1)
     PMUPingAllPDC(net, 'pmu15', timeout=1)
-    info('*** Test rules installed to connect PMU23 to PDC5 ***\n')
-    PMUPingAllPDC(net, 'pmu23', timeout=1)
-    info('*** Test rules installed to connect PMU25 to PDC5 ***\n')
-    PMUPingAllPDC(net, 'pmu25', timeout=1)
+    # info('*** Test rules installed to connect PMU23 to PDC5 ***\n')
+    # PMUPingAllPDC(net, 'pmu23', timeout=1)
+    # info('*** Test rules installed to connect PMU25 to PDC5 ***\n')
+    # PMUPingAllPDC(net, 'pmu25', timeout=1)
 
     for sw in changed_sw:
         DumpRule(net, sw)
