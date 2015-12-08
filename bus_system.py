@@ -103,7 +103,7 @@ def AllPDCPingAllPMU(net, timeout):
 
 def PDCPingAllPMU(net, pdc, timeout):
     pdc_host = net.getNodeByName(pdc)
-    output(' 5%s -> ' % pdc)
+    output(' %-5s -> ' % pdc)
     for pmu in net.topo.pmus:
         pmu_host = net.getNodeByName(pmu)
         opt = '-W %s' % timeout
@@ -111,8 +111,8 @@ def PDCPingAllPMU(net, pdc, timeout):
             pmu_host.IP()))
         outputs = net._parsePingFull(result)
         send, received, rttmin, rttavg, rttmax, rttdev = outputs
-        output(('%5s ' % pmu) if received else 'X ') 
-    output('\n')    
+        output(('%5s ' % pmu) if received else 'X ')
+    output('\n')
 
 def AllPMUPingAllPDC(net, timeout):
     """Ping only from PMU to PDC"""
@@ -123,7 +123,7 @@ def AllPMUPingAllPDC(net, timeout):
 
 def PMUPingAllPDC(net, pmu, timeout):
     pmu_host = net.getNodeByName(pmu)
-    output(' %5s -> ' % pmu)
+    output(' %-5s -> ' % pmu)
     for pdc in net.topo.pdcs:
         opt = '-c1 -W %s' % timeout
         pdc_host = net.getNodeByName(pdc)
@@ -131,7 +131,7 @@ def PMUPingAllPDC(net, pmu, timeout):
         outputs = net._parsePingFull(result)
         send, received, rttmin, rttavg, rttmax, rttdev = outputs
         output(('%5s ' % pdc) if received else 'X ')
-    output('\n')    
+    output('\n')
 
 
 def PMUPingPDC(net, pmu, pdc, timeout):
@@ -163,15 +163,15 @@ def IEEE30BusNetwork():
         # PMUPingPDC(net, 'PMU15', 'PDC8', 1)
         # PMUPingPDC(net, 'PMU9', 'PDC5', 1)
         PMUPingAllPDC(net, 'PMU15', timeout=1)
-        PMUPingAllPDC(net, 'PMU23', timeout=1) 
+        PMUPingAllPDC(net, 'PMU23', timeout=1)
         PMUPingAllPDC(net, 'PMU25', timeout=1)
     else:
         AllPMUPingAllPDC(net, 1)
-   
+
     info('\n****** Show rules on critical switches ******\n')
     for sw in changed_sw:
         DumpRule(net, sw)
-    
+
     # remove 2 pdcs by tear down link
     # info("\n****** Tear down link between PDC8 and Switch 8 ******\n")
     # info("****** Tear down link between PDC13 and Switch 13 ******\n")
@@ -180,7 +180,7 @@ def IEEE30BusNetwork():
 
     # old pdc should be unreachable
     info('\n****** PDC8 is isolated after being compromised ******\n')
-    info('*** PING Test from PMU15 PMU23 ***\n') 
+    info('*** PING Test from PMU15 PMU23 ***\n')
     # PMUPingPDC(net, 'PMU15', 'PDC8', 1)
     PMUPingAllPDC(net, 'PMU15', 1)
     PMUPingAllPDC(net, 'PMU23', 1)
@@ -189,7 +189,7 @@ def IEEE30BusNetwork():
     PMUPingAllPDC(net, 'PMU25', 1)
 
     raw_input("\n****** Self-heal controller installed new rules to reconnect PMUs ******\n")
-    # test newly installed rules 
+    # test newly installed rules
     info('*** Test rules installed to connect PMU15 to PDC5 ***\n')
     # PMUPingPDC(net, 'PMU15', 'PDC5', 1)
     PMUPingAllPDC(net, 'PMU15', timeout=1)
@@ -197,7 +197,7 @@ def IEEE30BusNetwork():
     PMUPingAllPDC(net, 'PMU23', timeout=1)
     info('*** Test rules installed to connect PMU25 to PDC5 ***\n')
     PMUPingAllPDC(net, 'PMU25', timeout=1)
-    
+
     info('\n****** Show rules on critical switches ******\n')
     for sw in changed_sw:
         DumpRule(net, sw)
