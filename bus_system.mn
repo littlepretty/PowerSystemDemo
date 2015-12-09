@@ -28,7 +28,7 @@
             "opts": {
                 "controllerProtocol": "tcp",
                 "controllerType": "remote",
-                "hostname": "c0",
+                "hostname": "Controller",
                 "remoteIP": "127.0.0.1",
                 "remotePort": 6633
             },
@@ -38,239 +38,49 @@
     ],
     "hosts": [
         {
-            "number": "14",
+            "number": "40",
             "opts": {
-                "hostname": "pdc14",
-                "nodeNum": 14,
+                "hostname": "PMU24",
+                "nodeNum": 40,
                 "sched": "host"
             },
-            "x": "987.0",
-            "y": "117.0"
-        },
-        {
-            "number": "23",
-            "opts": {
-                "hostname": "pmu7",
-                "nodeNum": 23,
-                "sched": "host"
-            },
-            "x": "130.0",
-            "y": "436.0"
-        },
-        {
-            "number": "18",
-            "opts": {
-                "hostname": "pmu2",
-                "nodeNum": 18,
-                "sched": "host"
-            },
-            "x": "304.0",
-            "y": "87.0"
-        },
-        {
-            "number": "3",
-            "opts": {
-                "hostname": "pdc3",
-                "nodeNum": 3,
-                "sched": "host"
-            },
-            "x": "54.0",
-            "y": "385.0"
-        },
-        {
-            "number": "30",
-            "opts": {
-                "hostname": "pmu14",
-                "nodeNum": 30,
-                "sched": "host"
-            },
-            "x": "411.0",
-            "y": "821.0"
-        },
-        {
-            "number": "5",
-            "opts": {
-                "hostname": "pdc5",
-                "nodeNum": 5,
-                "sched": "host"
-            },
-            "x": "220.0",
-            "y": "578.0"
-        },
-        {
-            "number": "29",
-            "opts": {
-                "hostname": "pmu13",
-                "nodeNum": 29,
-                "sched": "host"
-            },
-            "x": "554.0",
-            "y": "825.0"
-        },
-        {
-            "number": "6",
-            "opts": {
-                "hostname": "pdc6",
-                "nodeNum": 6,
-                "sched": "host"
-            },
-            "x": "200.0",
-            "y": "780.0"
+            "x": "1201.0",
+            "y": "454.0"
         },
         {
             "number": "32",
             "opts": {
-                "hostname": "pmu16",
+                "hostname": "PMU16",
                 "nodeNum": 32,
                 "sched": "host"
             },
-            "x": "917.0",
-            "y": "813.0"
+            "x": "887.0",
+            "y": "714.0"
         },
         {
-            "number": "2",
+            "number": "9",
             "opts": {
-                "hostname": "pdc2",
-                "nodeNum": 2,
+                "hostname": "PDC9",
+                "nodeNum": 9,
                 "sched": "host"
             },
-            "x": "159.0",
-            "y": "276.0"
+            "x": "811.0",
+            "y": "695.0"
         },
         {
             "number": "27",
             "opts": {
-                "hostname": "pmu11",
+                "hostname": "PMU11",
                 "nodeNum": 27,
                 "sched": "host"
             },
-            "x": "108.0",
-            "y": "704.0"
-        },
-        {
-            "number": "36",
-            "opts": {
-                "hostname": "pmu20",
-                "nodeNum": 36,
-                "sched": "host"
-            },
-            "x": "322.0",
-            "y": "883.0"
-        },
-        {
-            "number": "28",
-            "opts": {
-                "hostname": "pmu12",
-                "nodeNum": 28,
-                "sched": "host"
-            },
-            "x": "496.0",
-            "y": "891.0"
-        },
-        {
-            "number": "8",
-            "opts": {
-                "hostname": "pdc8",
-                "nodeNum": 8,
-                "sched": "host"
-            },
-            "x": "664.0",
-            "y": "910.0"
-        },
-        {
-            "number": "38",
-            "opts": {
-                "hostname": "pmu22",
-                "nodeNum": 38,
-                "sched": "host"
-            },
-            "x": "1125.0",
-            "y": "694.0"
-        },
-        {
-            "number": "41",
-            "opts": {
-                "hostname": "pmu25",
-                "nodeNum": 41,
-                "sched": "host"
-            },
-            "x": "1095.0",
-            "y": "398.0"
-        },
-        {
-            "number": "22",
-            "opts": {
-                "hostname": "pmu6",
-                "nodeNum": 22,
-                "sched": "host"
-            },
-            "x": "79.0",
-            "y": "579.0"
-        },
-        {
-            "number": "31",
-            "opts": {
-                "hostname": "pmu15",
-                "nodeNum": 31,
-                "sched": "host"
-            },
-            "x": "633.0",
-            "y": "816.0"
-        },
-        {
-            "number": "46",
-            "opts": {
-                "hostname": "pmu30",
-                "nodeNum": 46,
-                "sched": "host"
-            },
-            "x": "1089.0",
-            "y": "154.0"
-        },
-        {
-            "number": "37",
-            "opts": {
-                "hostname": "pmu21",
-                "nodeNum": 37,
-                "sched": "host"
-            },
-            "x": "157.0",
-            "y": "855.0"
-        },
-        {
-            "number": "13",
-            "opts": {
-                "hostname": "pdc13",
-                "nodeNum": 13,
-                "sched": "host"
-            },
-            "x": "1214.0",
-            "y": "323.0"
-        },
-        {
-            "number": "34",
-            "opts": {
-                "hostname": "pmu18",
-                "nodeNum": 34,
-                "sched": "host"
-            },
-            "x": "734.0",
-            "y": "873.0"
-        },
-        {
-            "number": "12",
-            "opts": {
-                "hostname": "pdc12",
-                "nodeNum": 12,
-                "sched": "host"
-            },
-            "x": "1140.0",
-            "y": "572.0"
+            "x": "198.0",
+            "y": "597.0"
         },
         {
             "number": "15",
             "opts": {
-                "hostname": "pdc15",
+                "hostname": "PDC15",
                 "nodeNum": 15,
                 "sched": "host"
             },
@@ -278,149 +88,39 @@
             "y": "114.0"
         },
         {
-            "number": "26",
+            "number": "34",
             "opts": {
-                "hostname": "pmu10",
-                "nodeNum": 26,
+                "hostname": "PMU18",
+                "nodeNum": 34,
                 "sched": "host"
             },
-            "x": "241.0",
-            "y": "716.0"
-        },
-        {
-            "number": "33",
-            "opts": {
-                "hostname": "pmu17",
-                "nodeNum": 33,
-                "sched": "host"
-            },
-            "x": "241.0",
-            "y": "865.0"
-        },
-        {
-            "number": "24",
-            "opts": {
-                "hostname": "pmu8",
-                "nodeNum": 24,
-                "sched": "host"
-            },
-            "x": "53.0",
-            "y": "468.0"
-        },
-        {
-            "number": "42",
-            "opts": {
-                "hostname": "pmu26",
-                "nodeNum": 42,
-                "sched": "host"
-            },
-            "x": "1113.0",
-            "y": "258.0"
-        },
-        {
-            "number": "39",
-            "opts": {
-                "hostname": "pmu23",
-                "nodeNum": 39,
-                "sched": "host"
-            },
-            "x": "812.0",
-            "y": "900.0"
-        },
-        {
-            "number": "10",
-            "opts": {
-                "hostname": "pdc10",
-                "nodeNum": 10,
-                "sched": "host"
-            },
-            "x": "1104.0",
-            "y": "774.0"
-        },
-        {
-            "number": "40",
-            "opts": {
-                "hostname": "pmu24",
-                "nodeNum": 40,
-                "sched": "host"
-            },
-            "x": "1149.0",
-            "y": "478.0"
-        },
-        {
-            "number": "11",
-            "opts": {
-                "hostname": "pdc11",
-                "nodeNum": 11,
-                "sched": "host"
-            },
-            "x": "1211.0",
-            "y": "669.0"
+            "x": "670.0",
+            "y": "762.0"
         },
         {
             "number": "35",
             "opts": {
-                "hostname": "pmu19",
+                "hostname": "PMU19",
                 "nodeNum": 35,
                 "sched": "host"
             },
-            "x": "1007.0",
-            "y": "806.0"
+            "x": "904.0",
+            "y": "644.0"
         },
         {
-            "number": "21",
+            "number": "33",
             "opts": {
-                "hostname": "pmu5",
-                "nodeNum": 21,
+                "hostname": "PMU17",
+                "nodeNum": 33,
                 "sched": "host"
             },
-            "x": "135.0",
-            "y": "343.0"
-        },
-        {
-            "number": "9",
-            "opts": {
-                "hostname": "pdc9",
-                "nodeNum": 9,
-                "sched": "host"
-            },
-            "x": "846.0",
-            "y": "823.0"
-        },
-        {
-            "number": "17",
-            "opts": {
-                "hostname": "pmu1",
-                "nodeNum": 17,
-                "sched": "host"
-            },
-            "x": "273.0",
-            "y": "192.0"
-        },
-        {
-            "number": "7",
-            "opts": {
-                "hostname": "pdc7",
-                "nodeNum": 7,
-                "sched": "host"
-            },
-            "x": "427.0",
-            "y": "904.0"
-        },
-        {
-            "number": "1",
-            "opts": {
-                "hostname": "pdc1",
-                "nodeNum": 1,
-                "sched": "host"
-            },
-            "x": "401.0",
-            "y": "80.0"
+            "x": "312.0",
+            "y": "748.0"
         },
         {
             "number": "16",
             "opts": {
-                "hostname": "pdc16",
+                "hostname": "PDC16",
                 "nodeNum": 16,
                 "sched": "host"
             },
@@ -428,39 +128,9 @@
             "y": "55.0"
         },
         {
-            "number": "19",
-            "opts": {
-                "hostname": "pmu3",
-                "nodeNum": 19,
-                "sched": "host"
-            },
-            "x": "163.0",
-            "y": "199.0"
-        },
-        {
-            "number": "25",
-            "opts": {
-                "hostname": "pmu9",
-                "nodeNum": 25,
-                "sched": "host"
-            },
-            "x": "141.0",
-            "y": "636.0"
-        },
-        {
-            "number": "43",
-            "opts": {
-                "hostname": "pmu27",
-                "nodeNum": 43,
-                "sched": "host"
-            },
-            "x": "1020.0",
-            "y": "247.0"
-        },
-        {
             "number": "4",
             "opts": {
-                "hostname": "pdc4",
+                "hostname": "PDC4",
                 "nodeNum": 4,
                 "sched": "host"
             },
@@ -468,19 +138,29 @@
             "y": "522.0"
         },
         {
-            "number": "20",
+            "number": "25",
             "opts": {
-                "hostname": "pmu4",
-                "nodeNum": 20,
+                "hostname": "PMU9",
+                "nodeNum": 25,
                 "sched": "host"
             },
-            "x": "222.0",
-            "y": "117.0"
+            "x": "254.0",
+            "y": "533.0"
+        },
+        {
+            "number": "7",
+            "opts": {
+                "hostname": "PDC7",
+                "nodeNum": 7,
+                "sched": "host"
+            },
+            "x": "453.0",
+            "y": "801.0"
         },
         {
             "number": "44",
             "opts": {
-                "hostname": "pmu28",
+                "hostname": "PMU28",
                 "nodeNum": 44,
                 "sched": "host"
             },
@@ -488,525 +168,764 @@
             "y": "115.0"
         },
         {
+            "number": "10",
+            "opts": {
+                "hostname": "PDC10",
+                "nodeNum": 10,
+                "sched": "host"
+            },
+            "x": "991.0",
+            "y": "645.0"
+        },
+        {
+            "number": "38",
+            "opts": {
+                "hostname": "PMU22",
+                "nodeNum": 38,
+                "sched": "host"
+            },
+            "x": "1117.0",
+            "y": "664.0"
+        },
+        {
+            "number": "28",
+            "opts": {
+                "hostname": "PMU12",
+                "nodeNum": 28,
+                "sched": "host"
+            },
+            "x": "518.0",
+            "y": "765.0"
+        },
+        {
+            "number": "42",
+            "opts": {
+                "hostname": "PMU26",
+                "nodeNum": 42,
+                "sched": "host"
+            },
+            "x": "1108.0",
+            "y": "388.0"
+        },
+        {
+            "number": "22",
+            "opts": {
+                "hostname": "PMU6",
+                "nodeNum": 22,
+                "sched": "host"
+            },
+            "x": "79.0",
+            "y": "579.0"
+        },
+        {
+            "number": "23",
+            "opts": {
+                "hostname": "PMU7",
+                "nodeNum": 23,
+                "sched": "host"
+            },
+            "x": "130.0",
+            "y": "436.0"
+        },
+        {
+            "number": "5",
+            "opts": {
+                "hostname": "PDC5",
+                "nodeNum": 5,
+                "sched": "host"
+            },
+            "x": "180.0",
+            "y": "658.0"
+        },
+        {
+            "number": "3",
+            "opts": {
+                "hostname": "PDC3",
+                "nodeNum": 3,
+                "sched": "host"
+            },
+            "x": "54.0",
+            "y": "385.0"
+        },
+        {
+            "number": "46",
+            "opts": {
+                "hostname": "PMU30",
+                "nodeNum": 46,
+                "sched": "host"
+            },
+            "x": "1089.0",
+            "y": "154.0"
+        },
+        {
+            "number": "6",
+            "opts": {
+                "hostname": "PDC6",
+                "nodeNum": 6,
+                "sched": "host"
+            },
+            "x": "268.0",
+            "y": "675.0"
+        },
+        {
+            "number": "13",
+            "opts": {
+                "hostname": "PDC13",
+                "nodeNum": 13,
+                "sched": "host"
+            },
+            "x": "1214.0",
+            "y": "323.0"
+        },
+        {
+            "number": "21",
+            "opts": {
+                "hostname": "PMU5",
+                "nodeNum": 21,
+                "sched": "host"
+            },
+            "x": "135.0",
+            "y": "343.0"
+        },
+        {
+            "number": "11",
+            "opts": {
+                "hostname": "PDC11",
+                "nodeNum": 11,
+                "sched": "host"
+            },
+            "x": "1187.0",
+            "y": "620.0"
+        },
+        {
+            "number": "2",
+            "opts": {
+                "hostname": "PDC2",
+                "nodeNum": 2,
+                "sched": "host"
+            },
+            "x": "159.0",
+            "y": "276.0"
+        },
+        {
+            "number": "17",
+            "opts": {
+                "hostname": "PMU1",
+                "nodeNum": 17,
+                "sched": "host"
+            },
+            "x": "273.0",
+            "y": "192.0"
+        },
+        {
+            "number": "26",
+            "opts": {
+                "hostname": "PMU10",
+                "nodeNum": 26,
+                "sched": "host"
+            },
+            "x": "330.0",
+            "y": "609.0"
+        },
+        {
+            "number": "12",
+            "opts": {
+                "hostname": "PDC12",
+                "nodeNum": 12,
+                "sched": "host"
+            },
+            "x": "1179.0",
+            "y": "546.0"
+        },
+        {
+            "number": "1",
+            "opts": {
+                "hostname": "PDC1",
+                "nodeNum": 1,
+                "sched": "host"
+            },
+            "x": "401.0",
+            "y": "80.0"
+        },
+        {
+            "number": "24",
+            "opts": {
+                "hostname": "PMU8",
+                "nodeNum": 24,
+                "sched": "host"
+            },
+            "x": "53.0",
+            "y": "468.0"
+        },
+        {
+            "number": "19",
+            "opts": {
+                "hostname": "PMU3",
+                "nodeNum": 19,
+                "sched": "host"
+            },
+            "x": "163.0",
+            "y": "199.0"
+        },
+        {
+            "number": "20",
+            "opts": {
+                "hostname": "PMU4",
+                "nodeNum": 20,
+                "sched": "host"
+            },
+            "x": "222.0",
+            "y": "117.0"
+        },
+        {
+            "number": "43",
+            "opts": {
+                "hostname": "PMU27",
+                "nodeNum": 43,
+                "sched": "host"
+            },
+            "x": "1020.0",
+            "y": "247.0"
+        },
+        {
+            "number": "39",
+            "opts": {
+                "hostname": "PMU23",
+                "nodeNum": 39,
+                "sched": "host"
+            },
+            "x": "735.0",
+            "y": "637.0"
+        },
+        {
             "number": "45",
             "opts": {
-                "hostname": "pmu29",
+                "hostname": "PMU29",
                 "nodeNum": 45,
                 "sched": "host"
             },
             "x": "733.0",
             "y": "101.0"
+        },
+        {
+            "number": "36",
+            "opts": {
+                "hostname": "PMU20",
+                "nodeNum": 36,
+                "sched": "host"
+            },
+            "x": "338.0",
+            "y": "806.0"
+        },
+        {
+            "number": "41",
+            "opts": {
+                "hostname": "PMU25",
+                "nodeNum": 41,
+                "sched": "host"
+            },
+            "x": "1136.0",
+            "y": "253.0"
+        },
+        {
+            "number": "8",
+            "opts": {
+                "hostname": "PDC8",
+                "nodeNum": 8,
+                "sched": "host"
+            },
+            "x": "601.0",
+            "y": "777.0"
+        },
+        {
+            "number": "14",
+            "opts": {
+                "hostname": "PDC14",
+                "nodeNum": 14,
+                "sched": "host"
+            },
+            "x": "987.0",
+            "y": "117.0"
+        },
+        {
+            "number": "31",
+            "opts": {
+                "hostname": "PMU15",
+                "nodeNum": 31,
+                "sched": "host"
+            },
+            "x": "711.0",
+            "y": "708.0"
+        },
+        {
+            "number": "18",
+            "opts": {
+                "hostname": "PMU2",
+                "nodeNum": 18,
+                "sched": "host"
+            },
+            "x": "304.0",
+            "y": "87.0"
+        },
+        {
+            "number": "29",
+            "opts": {
+                "hostname": "PMU13",
+                "nodeNum": 29,
+                "sched": "host"
+            },
+            "x": "562.0",
+            "y": "688.0"
+        },
+        {
+            "number": "30",
+            "opts": {
+                "hostname": "PMU14",
+                "nodeNum": 30,
+                "sched": "host"
+            },
+            "x": "428.0",
+            "y": "727.0"
+        },
+        {
+            "number": "37",
+            "opts": {
+                "hostname": "PMU21",
+                "nodeNum": 37,
+                "sched": "host"
+            },
+            "x": "237.0",
+            "y": "743.0"
         }
     ],
     "links": [
         {
-            "dest": "s1",
+            "dest": "Switch1",
             "opts": {},
-            "src": "pdc1"
+            "src": "PDC1"
         },
         {
-            "dest": "s2",
+            "dest": "Switch2",
             "opts": {},
-            "src": "pdc2"
+            "src": "PDC2"
         },
         {
-            "dest": "s3",
+            "dest": "Switch3",
             "opts": {},
-            "src": "pdc3"
+            "src": "PDC3"
         },
         {
-            "dest": "s4",
+            "dest": "Switch4",
             "opts": {},
-            "src": "pdc4"
+            "src": "PDC4"
         },
         {
-            "dest": "s5",
+            "dest": "Switch5",
             "opts": {},
-            "src": "pdc5"
+            "src": "PDC5"
         },
         {
-            "dest": "s6",
+            "dest": "Switch6",
             "opts": {},
-            "src": "pdc6"
+            "src": "PDC6"
         },
         {
-            "dest": "s7",
+            "dest": "Switch7",
             "opts": {},
-            "src": "pdc7"
+            "src": "PDC7"
         },
         {
-            "dest": "s8",
+            "dest": "Switch8",
             "opts": {},
-            "src": "pdc8"
+            "src": "PDC8"
         },
         {
-            "dest": "s9",
+            "dest": "Switch9",
             "opts": {},
-            "src": "pdc9"
+            "src": "PDC9"
         },
         {
-            "dest": "s10",
+            "dest": "Switch10",
             "opts": {},
-            "src": "pdc10"
+            "src": "PDC10"
         },
         {
-            "dest": "s11",
+            "dest": "Switch11",
             "opts": {},
-            "src": "pdc11"
+            "src": "PDC11"
         },
         {
-            "dest": "s12",
+            "dest": "Switch12",
             "opts": {},
-            "src": "pdc12"
+            "src": "PDC12"
         },
         {
-            "dest": "s13",
+            "dest": "Switch13",
             "opts": {},
-            "src": "pdc13"
+            "src": "PDC13"
         },
         {
-            "dest": "s14",
+            "dest": "Switch14",
             "opts": {},
-            "src": "pdc14"
+            "src": "PDC14"
         },
         {
-            "dest": "s15",
+            "dest": "Switch15",
             "opts": {},
-            "src": "pdc15"
+            "src": "PDC15"
         },
         {
-            "dest": "s16",
+            "dest": "Switch16",
             "opts": {},
-            "src": "pdc16"
+            "src": "PDC16"
         },
         {
-            "dest": "s18",
+            "dest": "Switch18",
             "opts": {},
-            "src": "s17"
+            "src": "Switch17"
         },
         {
-            "dest": "s19",
+            "dest": "Switch19",
             "opts": {},
-            "src": "s17"
+            "src": "Switch17"
         },
         {
-            "dest": "s20",
+            "dest": "Switch20",
             "opts": {},
-            "src": "s17"
+            "src": "Switch17"
         },
         {
-            "dest": "s19",
+            "dest": "Switch19",
             "opts": {},
-            "src": "s18"
+            "src": "Switch18"
         },
         {
-            "dest": "s20",
+            "dest": "Switch20",
             "opts": {},
-            "src": "s18"
+            "src": "Switch18"
         },
         {
-            "dest": "s20",
+            "dest": "Switch20",
             "opts": {},
-            "src": "s19"
+            "src": "Switch19"
         },
         {
-            "dest": "s1",
+            "dest": "Switch1",
             "opts": {},
-            "src": "pmu2"
+            "src": "PMU2"
         },
         {
-            "dest": "s1",
+            "dest": "Switch1",
             "opts": {},
-            "src": "pmu4"
+            "src": "PMU4"
         },
         {
-            "dest": "s1",
+            "dest": "Switch1",
             "opts": {},
-            "src": "pmu1"
+            "src": "PMU1"
         },
         {
-            "dest": "pmu3",
+            "dest": "PMU3",
             "opts": {},
-            "src": "s2"
+            "src": "Switch2"
         },
         {
-            "dest": "pmu5",
+            "dest": "PMU5",
             "opts": {},
-            "src": "s3"
+            "src": "Switch3"
         },
         {
-            "dest": "pmu7",
+            "dest": "PMU7",
             "opts": {},
-            "src": "s3"
+            "src": "Switch3"
         },
         {
-            "dest": "pmu6",
+            "dest": "PMU6",
             "opts": {},
-            "src": "s4"
+            "src": "Switch4"
         },
         {
-            "dest": "pmu8",
+            "dest": "PMU8",
             "opts": {},
-            "src": "s4"
+            "src": "Switch4"
         },
         {
-            "dest": "pmu9",
+            "dest": "PMU9",
             "opts": {},
-            "src": "s5"
+            "src": "Switch5"
         },
         {
-            "dest": "pmu11",
+            "dest": "PMU11",
             "opts": {},
-            "src": "s5"
+            "src": "Switch5"
         },
         {
-            "dest": "pmu10",
+            "dest": "PMU10",
             "opts": {},
-            "src": "s6"
+            "src": "Switch6"
         },
         {
-            "dest": "pmu17",
+            "dest": "PMU17",
             "opts": {},
-            "src": "s6"
+            "src": "Switch6"
         },
         {
-            "dest": "pmu20",
+            "dest": "PMU20",
             "opts": {},
-            "src": "s6"
+            "src": "Switch6"
         },
         {
-            "dest": "pmu21",
+            "dest": "PMU21",
             "opts": {},
-            "src": "s6"
+            "src": "Switch6"
         },
         {
-            "dest": "pmu12",
+            "dest": "PMU12",
             "opts": {},
-            "src": "s7"
+            "src": "Switch7"
         },
         {
-            "dest": "pmu13",
+            "dest": "PMU13",
             "opts": {},
-            "src": "s7"
+            "src": "Switch7"
         },
         {
-            "dest": "pmu14",
+            "dest": "PMU14",
             "opts": {},
-            "src": "s7"
+            "src": "Switch7"
         },
         {
-            "dest": "pmu15",
+            "dest": "PMU15",
             "opts": {},
-            "src": "s8"
+            "src": "Switch8"
         },
         {
-            "dest": "pmu18",
+            "dest": "PMU18",
             "opts": {},
-            "src": "s8"
+            "src": "Switch8"
         },
         {
-            "dest": "pmu23",
+            "dest": "PMU23",
             "opts": {},
-            "src": "s8"
+            "src": "Switch8"
         },
         {
-            "dest": "s9",
+            "dest": "Switch9",
             "opts": {},
-            "src": "pmu16"
+            "src": "PMU16"
         },
         {
-            "dest": "pmu19",
+            "dest": "PMU19",
             "opts": {},
-            "src": "s10"
+            "src": "Switch10"
         },
         {
-            "dest": "pmu22",
+            "dest": "PMU22",
             "opts": {},
-            "src": "s11"
+            "src": "Switch11"
         },
         {
-            "dest": "pmu24",
+            "dest": "PMU24",
             "opts": {},
-            "src": "s12"
+            "src": "Switch12"
         },
         {
-            "dest": "pmu25",
+            "dest": "PMU25",
             "opts": {},
-            "src": "s13"
+            "src": "Switch13"
         },
         {
-            "dest": "pmu26",
+            "dest": "PMU26",
             "opts": {},
-            "src": "s13"
+            "src": "Switch13"
         },
         {
-            "dest": "pmu27",
+            "dest": "PMU27",
             "opts": {},
-            "src": "s14"
+            "src": "Switch14"
         },
         {
-            "dest": "s14",
+            "dest": "Switch14",
             "opts": {},
-            "src": "pmu30"
+            "src": "PMU30"
         },
         {
-            "dest": "pmu28",
+            "dest": "PMU28",
             "opts": {},
-            "src": "s15"
+            "src": "Switch15"
         },
         {
-            "dest": "pmu29",
+            "dest": "PMU29",
             "opts": {},
-            "src": "s16"
+            "src": "Switch16"
         },
         {
-            "dest": "s17",
+            "dest": "Switch17",
             "opts": {},
-            "src": "s1"
+            "src": "Switch1"
         },
         {
-            "dest": "s17",
+            "dest": "Switch17",
             "opts": {},
-            "src": "s2"
+            "src": "Switch2"
         },
         {
-            "dest": "s17",
+            "dest": "Switch17",
             "opts": {},
-            "src": "s3"
+            "src": "Switch3"
         },
         {
-            "dest": "s17",
+            "dest": "Switch17",
             "opts": {},
-            "src": "s4"
+            "src": "Switch4"
         },
         {
-            "dest": "s18",
+            "dest": "Switch18",
             "opts": {},
-            "src": "s5"
+            "src": "Switch5"
         },
         {
-            "dest": "s18",
+            "dest": "Switch18",
             "opts": {},
-            "src": "s6"
+            "src": "Switch6"
         },
         {
-            "dest": "s18",
+            "dest": "Switch18",
             "opts": {},
-            "src": "s7"
+            "src": "Switch7"
         },
         {
-            "dest": "s18",
+            "dest": "Switch18",
             "opts": {},
-            "src": "s8"
+            "src": "Switch8"
         },
         {
-            "dest": "s9",
+            "dest": "Switch9",
             "opts": {},
-            "src": "s19"
+            "src": "Switch19"
         },
         {
-            "dest": "s10",
+            "dest": "Switch10",
             "opts": {},
-            "src": "s19"
+            "src": "Switch19"
         },
         {
-            "dest": "s19",
+            "dest": "Switch19",
             "opts": {},
-            "src": "s11"
+            "src": "Switch11"
         },
         {
-            "dest": "s19",
+            "dest": "Switch19",
             "opts": {},
-            "src": "s12"
+            "src": "Switch12"
         },
         {
-            "dest": "s20",
+            "dest": "Switch20",
             "opts": {},
-            "src": "s13"
+            "src": "Switch13"
         },
         {
-            "dest": "s20",
+            "dest": "Switch20",
             "opts": {},
-            "src": "s14"
+            "src": "Switch14"
         },
         {
-            "dest": "s20",
+            "dest": "Switch20",
             "opts": {},
-            "src": "s15"
+            "src": "Switch15"
         },
         {
-            "dest": "s20",
+            "dest": "Switch20",
             "opts": {},
-            "src": "s16"
+            "src": "Switch16"
         }
     ],
     "switches": [
         {
-            "number": "13",
-            "opts": {
-                "controllers": [
-                    "c0"
-                ],
-                "hostname": "s13",
-                "nodeNum": 13,
-                "switchType": "ovs"
-            },
-            "x": "1010.0",
-            "y": "331.0"
-        },
-        {
             "number": "10",
             "opts": {
                 "controllers": [
-                    "c0"
+                    "Controller"
                 ],
-                "hostname": "s10",
+                "hostname": "Switch10",
                 "nodeNum": 10,
                 "switchType": "ovs"
             },
-            "x": "1010.0",
-            "y": "702.0"
+            "x": "898.0",
+            "y": "564.0"
         },
         {
-            "number": "19",
+            "number": "9",
             "opts": {
                 "controllers": [
-                    "c0"
+                    "Controller"
                 ],
-                "hostname": "s19",
-                "nodeNum": 19,
+                "hostname": "Switch9",
+                "nodeNum": 9,
                 "switchType": "ovs"
             },
-            "x": "863.0",
-            "y": "577.0"
-        },
-        {
-            "number": "2",
-            "opts": {
-                "controllers": [
-                    "c0"
-                ],
-                "hostname": "s2",
-                "netflow": "0",
-                "nodeNum": 2,
-                "sflow": "0",
-                "switchIP": "",
-                "switchType": "ovs"
-            },
-            "x": "271.0",
-            "y": "287.0"
-        },
-        {
-            "number": "12",
-            "opts": {
-                "controllers": [
-                    "c0"
-                ],
-                "hostname": "s12",
-                "nodeNum": 12,
-                "switchType": "ovs"
-            },
-            "x": "1036.0",
-            "y": "478.0"
-        },
-        {
-            "number": "17",
-            "opts": {
-                "controllers": [
-                    "c0"
-                ],
-                "hostname": "s17",
-                "nodeNum": 17,
-                "switchType": "ovs"
-            },
-            "x": "495.0",
-            "y": "400.0"
-        },
-        {
-            "number": "16",
-            "opts": {
-                "controllers": [
-                    "c0"
-                ],
-                "hostname": "s16",
-                "nodeNum": 16,
-                "switchType": "ovs"
-            },
-            "x": "593.0",
-            "y": "257.0"
-        },
-        {
-            "number": "5",
-            "opts": {
-                "controllers": [
-                    "c0"
-                ],
-                "hostname": "s5",
-                "nodeNum": 5,
-                "switchType": "ovs"
-            },
-            "x": "308.0",
-            "y": "647.0"
+            "x": "766.0",
+            "y": "567.0"
         },
         {
             "number": "8",
             "opts": {
                 "controllers": [
-                    "c0"
+                    "Controller"
                 ],
-                "hostname": "s8",
+                "hostname": "Switch8",
                 "nodeNum": 8,
                 "switchType": "ovs"
             },
-            "x": "702.0",
-            "y": "728.0"
-        },
-        {
-            "number": "7",
-            "opts": {
-                "controllers": [
-                    "c0"
-                ],
-                "hostname": "s7",
-                "nodeNum": 7,
-                "switchType": "ovs"
-            },
-            "x": "525.0",
-            "y": "727.0"
-        },
-        {
-            "number": "20",
-            "opts": {
-                "controllers": [
-                    "c0"
-                ],
-                "hostname": "s20",
-                "nodeNum": 20,
-                "switchType": "ovs"
-            },
-            "x": "864.0",
-            "y": "401.0"
+            "x": "637.0",
+            "y": "539.0"
         },
         {
             "number": "11",
             "opts": {
                 "controllers": [
-                    "c0"
+                    "Controller"
                 ],
-                "hostname": "s11",
+                "hostname": "Switch11",
                 "nodeNum": 11,
                 "switchType": "ovs"
             },
-            "x": "1042.0",
-            "y": "576.0"
+            "x": "1016.0",
+            "y": "560.0"
+        },
+        {
+            "number": "15",
+            "opts": {
+                "controllers": [
+                    "Controller"
+                ],
+                "hostname": "Switch15",
+                "nodeNum": 15,
+                "switchType": "ovs"
+            },
+            "x": "781.0",
+            "y": "237.0"
+        },
+        {
+            "number": "17",
+            "opts": {
+                "controllers": [
+                    "Controller"
+                ],
+                "hostname": "Switch17",
+                "nodeNum": 17,
+                "switchType": "ovs"
+            },
+            "x": "499.0",
+            "y": "345.0"
         },
         {
             "number": "1",
             "opts": {
                 "controllers": [
-                    "c0"
+                    "Controller"
                 ],
-                "hostname": "s1",
+                "hostname": "Switch1",
                 "netflow": "0",
                 "nodeNum": 1,
                 "sflow": "0",
@@ -1020,9 +939,9 @@
             "number": "3",
             "opts": {
                 "controllers": [
-                    "c0"
+                    "Controller"
                 ],
-                "hostname": "s3",
+                "hostname": "Switch3",
                 "nodeNum": 3,
                 "switchType": "ovs"
             },
@@ -1030,64 +949,51 @@
             "y": "401.0"
         },
         {
-            "number": "6",
+            "number": "4",
             "opts": {
                 "controllers": [
-                    "c0"
+                    "Controller"
                 ],
-                "hostname": "s6",
-                "nodeNum": 6,
+                "hostname": "Switch4",
+                "nodeNum": 4,
                 "switchType": "ovs"
             },
-            "x": "398.0",
-            "y": "736.0"
+            "x": "311.0",
+            "y": "466.0"
         },
         {
-            "number": "15",
+            "number": "12",
             "opts": {
                 "controllers": [
-                    "c0"
+                    "Controller"
                 ],
-                "hostname": "s15",
-                "nodeNum": 15,
+                "hostname": "Switch12",
+                "nodeNum": 12,
                 "switchType": "ovs"
             },
-            "x": "781.0",
-            "y": "237.0"
+            "x": "1036.0",
+            "y": "478.0"
         },
         {
-            "number": "18",
+            "number": "5",
             "opts": {
                 "controllers": [
-                    "c0"
+                    "Controller"
                 ],
-                "hostname": "s18",
-                "nodeNum": 18,
+                "hostname": "Switch5",
+                "nodeNum": 5,
                 "switchType": "ovs"
             },
-            "x": "494.0",
-            "y": "578.0"
-        },
-        {
-            "number": "9",
-            "opts": {
-                "controllers": [
-                    "c0"
-                ],
-                "hostname": "s9",
-                "nodeNum": 9,
-                "switchType": "ovs"
-            },
-            "x": "864.0",
-            "y": "721.0"
+            "x": "374.0",
+            "y": "518.0"
         },
         {
             "number": "14",
             "opts": {
                 "controllers": [
-                    "c0"
+                    "Controller"
                 ],
-                "hostname": "s14",
+                "hostname": "Switch14",
                 "nodeNum": 14,
                 "switchType": "ovs"
             },
@@ -1095,17 +1001,111 @@
             "y": "246.0"
         },
         {
-            "number": "4",
+            "number": "16",
             "opts": {
                 "controllers": [
-                    "c0"
+                    "Controller"
                 ],
-                "hostname": "s4",
-                "nodeNum": 4,
+                "hostname": "Switch16",
+                "nodeNum": 16,
                 "switchType": "ovs"
             },
-            "x": "277.0",
-            "y": "505.0"
+            "x": "593.0",
+            "y": "257.0"
+        },
+        {
+            "number": "19",
+            "opts": {
+                "controllers": [
+                    "Controller"
+                ],
+                "hostname": "Switch19",
+                "nodeNum": 19,
+                "switchType": "ovs"
+            },
+            "x": "854.0",
+            "y": "461.0"
+        },
+        {
+            "number": "13",
+            "opts": {
+                "controllers": [
+                    "Controller"
+                ],
+                "hostname": "Switch13",
+                "nodeNum": 13,
+                "switchType": "ovs"
+            },
+            "x": "1010.0",
+            "y": "331.0"
+        },
+        {
+            "number": "18",
+            "opts": {
+                "controllers": [
+                    "Controller"
+                ],
+                "hostname": "Switch18",
+                "nodeNum": 18,
+                "switchType": "ovs"
+            },
+            "x": "499.0",
+            "y": "462.0"
+        },
+        {
+            "number": "20",
+            "opts": {
+                "controllers": [
+                    "Controller"
+                ],
+                "hostname": "Switch20",
+                "nodeNum": 20,
+                "switchType": "ovs"
+            },
+            "x": "851.0",
+            "y": "344.0"
+        },
+        {
+            "number": "7",
+            "opts": {
+                "controllers": [
+                    "Controller"
+                ],
+                "hostname": "Switch7",
+                "nodeNum": 7,
+                "switchType": "ovs"
+            },
+            "x": "523.0",
+            "y": "586.0"
+        },
+        {
+            "number": "6",
+            "opts": {
+                "controllers": [
+                    "Controller"
+                ],
+                "hostname": "Switch6",
+                "nodeNum": 6,
+                "switchType": "ovs"
+            },
+            "x": "416.0",
+            "y": "625.0"
+        },
+        {
+            "number": "2",
+            "opts": {
+                "controllers": [
+                    "Controller"
+                ],
+                "hostname": "Switch2",
+                "netflow": "0",
+                "nodeNum": 2,
+                "sflow": "0",
+                "switchIP": "",
+                "switchType": "ovs"
+            },
+            "x": "271.0",
+            "y": "287.0"
         }
     ],
     "version": "2"
